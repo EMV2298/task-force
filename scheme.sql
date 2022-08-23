@@ -10,6 +10,11 @@ CREATE TABLE categories (
   name VARCHAR(128) NOT NULL
 );
 
+CREATE TABLE cities (
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  name VARCHAR(128) NOT NULL  
+)
+
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   dt_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -19,11 +24,12 @@ CREATE TABLE users (
   password VARCHAR(128) NOT NULL,
   phonenumber VARCHAR(128) NOT NULL,
   telegram VARCHAR(128) NULL,
-  city VARCHAR(128) NULL,
+  city_id VARCHAR(128) NULL,
   avatar TINYTEXT NULL,
   description TEXT NULL,
   status BOOL NOT NULL,
-  show_contacts BOOL NOT NULL
+  show_contacts BOOL NOT NULL,
+  FOREIGN KEY city_id REFERENCES cities (id)
 );
 
 CREATE TABLE executor_categories (
@@ -42,13 +48,15 @@ CREATE TABLE tasks (
   title TINYTEXT NOT NULL,
   description TEXT NULL,
   category_id INT NOT NULL,
-  address TINYTEXT NULL,
+  city_id VARCHAR(128) NULL,
+  location VARCHAR(128) NULL,
   budget MEDIUMINT NULL,
   date_completion DATE NULL,  
   status TINYTEXT NOT NULL,
   FOREIGN KEY (customer_id) REFERENCES users (id),
   FOREIGN KEY (executor_id) REFERENCES users (id),
-  FOREIGN KEY (category_id) REFERENCES categories(id)
+  FOREIGN KEY (category_id) REFERENCES categories(id),
+  FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 CREATE FULLTEXT INDEX search ON tasks(title);
 
