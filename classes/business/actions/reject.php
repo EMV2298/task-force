@@ -2,7 +2,9 @@
 
 namespace taskforce\business\actions;
 
-class reject extends Actions {
+use taskforce\business\Task;
+
+class Reject extends Actions {
   
   public function getActionName(): string
   {
@@ -11,7 +13,7 @@ class reject extends Actions {
 
   public function getInternalName(): string
   {
-    return 'reject';
+    return Task::ACTION_EXECUTOR_REJECT;
   }
   
   public static function checkAccess(int $userId, int $customerId, int $executorId): bool

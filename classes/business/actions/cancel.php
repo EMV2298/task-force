@@ -2,7 +2,9 @@
 
 namespace taskforce\business\actions;
 
-class cancel extends Actions {
+use taskforce\business\Task;
+
+class Cancel extends Actions {
   
   public function getActionName(): string
   {
@@ -11,7 +13,7 @@ class cancel extends Actions {
 
   public function getInternalName(): string
   {
-    return 'cancel';
+    return Task::ACTION_CUSTOMER_CANCEL;
   }
   
   public static function checkAccess(int $userId, int $customerId, int $executorId): bool

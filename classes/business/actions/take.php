@@ -2,7 +2,9 @@
 
 namespace taskforce\business\actions;
 
-class take extends Actions {
+use taskforce\business\Task;
+
+class Take extends Actions {
   
   public function getActionName(): string
   {
@@ -11,12 +13,12 @@ class take extends Actions {
 
   public function getInternalName(): string
   {
-    return 'take';
+    return Task::ACTION_EXECUTOR_TAKE;
   }
   
   public static function checkAccess(int $userId, int $customerId, int $executorId): bool
   {
-    return $userId === $executorId;
+    return $userId !== $customerId && !$executorId;
   }
 
 }
