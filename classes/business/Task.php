@@ -2,6 +2,11 @@
 
 namespace taskforce\business;
 
+use taskforce\business\actions\cancel;
+use taskforce\business\actions\done;
+use taskforce\business\actions\reject;
+use taskforce\business\actions\take;
+
 class Task {
 
   const STATUS_NEW = 'new';
@@ -15,6 +20,7 @@ class Task {
   const ACTION_EXECUTOR_TAKE = 'take';
   const ACTION_EXECUTOR_REJECT = 'reject';
   
+  private $userId = 1;
   private $customerId;
   private $executorId;
   private $status;
@@ -45,19 +51,18 @@ class Task {
   }
 
   public function getAvailableActions() {
-    $actionsMap = [
-      self::STATUS_NEW => [
-        'customer' => self::ACTION_CUSTOMER_CANCEL,
-        'executor' => self::ACTION_EXECUTOR_TAKE
-      ],
-      self::STATUS_IN_PROGRESS => [
-        'customer' => self::ACTION_CUSTOMER_DONE,
-        'executor' => self::ACTION_EXECUTOR_REJECT
-      ],
-    ];
-
-    return $actionsMap[$this->status] ?? [];
-
+    if ($this->status === self::STATUS_NEW && cancel::checkAccess($this->userId, $this->customerId, $this->executorId)) {
+      return new cancel;
+    }
+    if ($this->status === self::STATUS_NEW && take::checkAccess($this->userId, $this->customerId, $this->executorId)) {
+      return new take;
+    }
+    if ($this->status === self::STATUS_IN_PROGRESS && done::checkAccess($this->userId, $this->customerId, $this->executorId)) {
+      return new done;
+    }
+    if ($this->status === self::STATUS_IN_PROGRESS && reject::checkAccess($this->userId, $this->customerId, $this->executorId)) {
+      return new reject;
+    }
   }
 
   public function getNextStatus($action) {
