@@ -16,7 +16,7 @@ class Take extends Actions {
     return Task::ACTION_EXECUTOR_TAKE;
   }
   
-  public static function checkAccess(int $userId, int $customerId, int $executorId): bool
+  public static function checkAccess(int $userId, int $customerId, ?int $executorId): bool
   {
     return $userId !== $customerId && !$executorId;
   }

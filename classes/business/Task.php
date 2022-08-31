@@ -2,10 +2,11 @@
 
 namespace taskforce\business;
 
-use taskforce\business\actions\cancel;
-use taskforce\business\actions\done;
-use taskforce\business\actions\reject;
-use taskforce\business\actions\take;
+use taskforce\business\actions\Actions;
+use taskforce\business\actions\Cancel;
+use taskforce\business\actions\Done;
+use taskforce\business\actions\Reject;
+use taskforce\business\actions\Take;
 use taskforce\exception\TaskActionException;
 use taskforce\exception\TaskStatusException;
 
@@ -23,21 +24,20 @@ class Task
   const ACTION_CUSTOMER_DONE = 'done';
   const ACTION_EXECUTOR_TAKE = 'take';
   const ACTION_EXECUTOR_REJECT = 'reject';
-  
+
 
   private $customerId;
   private $executorId;
   private $status;
 
-  public function __construct(int $customerId, int $executorId, string $status)
+  public function __construct(int $customerId, ?int $executorId, string $status)
   {
-    if (in_array($status, self::STATUSES, true)) {
-      $this->customerId = $customerId;
-      $this->executorId = $executorId;
-      $this->status = $status;
-    } else {
+    if (!in_array($status, self::STATUSES, true)) {
       throw new TaskStatusException('Не верный статус');
     }
+    $this->customerId = $customerId;
+    $this->executorId = $executorId;
+    $this->status = $status;
   }
 
   public function getAllStatuses()
@@ -61,19 +61,19 @@ class Task
     ];
   }
 
-  public function getAvailableActions(int $userId) 
+  public function getAvailableActions(int $userId): Actions
   {
-    if ($this->status === self::STATUS_NEW && cancel::checkAccess($userId, $this->customerId, $this->executorId)) {
-      return new cancel;
+    if ($this->status === self::STATUS_NEW && Cancel::checkAccess($userId, $this->customerId, $this->executorId)) {
+      return new Cancel;
     }
-    if ($this->status === self::STATUS_NEW && take::checkAccess($userId, $this->customerId, $this->executorId)) {
-      return new take;
+    if ($this->status === self::STATUS_NEW && Take::checkAccess($userId, $this->customerId, $this->executorId)) {
+      return new Take;
     }
-    if ($this->status === self::STATUS_IN_PROGRESS && done::checkAccess($userId, $this->customerId, $this->executorId)) {
-      return new done;
+    if ($this->status === self::STATUS_IN_PROGRESS && Done::checkAccess($userId, $this->customerId, $this->executorId)) {
+      return new Done;
     }
-    if ($this->status === self::STATUS_IN_PROGRESS && reject::checkAccess($userId, $this->customerId, $this->executorId)) {
-      return new reject;
+    if ($this->status === self::STATUS_IN_PROGRESS && Reject::checkAccess($userId, $this->customerId, $this->executorId)) {
+      return new Reject;
     }
   }
 

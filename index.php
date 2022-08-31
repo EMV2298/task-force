@@ -5,7 +5,7 @@ use taskforce\business\Task;
 
 $executor = NULL;
 
-$task1 = new Task(12, $executor ?? 0, 'new');
+$task1 = new Task(1, $executor, 'new');
 
-var_dump($task1->getAvailableActions(12));
+var_dump($task1->getAvailableActions(1));
 
