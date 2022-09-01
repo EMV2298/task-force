@@ -16,7 +16,7 @@ class Reject extends Actions {
     return Task::ACTION_EXECUTOR_REJECT;
   }
   
-  public static function checkAccess(int $userId, int $customerId, int $executorId): bool
+  public static function checkAccess(int $userId, int $customerId, ?int $executorId): bool
   {
     return $userId === $executorId;
   }
