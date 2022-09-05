@@ -6,14 +6,16 @@ USE taskforce;
 
 CREATE TABLE categories (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-  category VARCHAR(128) NOT NULL,
+  icon VARCHAR(128) NOT NULL,
   name VARCHAR(128) NOT NULL
 );
 
 CREATE TABLE cities (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-  name VARCHAR(128) NOT NULL  
-)
+  name VARCHAR(128) NOT NULL,
+  lat TINYTEXT NOT NULL,
+  lng TINYTEXT NOT NULL 
+);
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -24,12 +26,12 @@ CREATE TABLE users (
   password VARCHAR(128) NOT NULL,
   phonenumber VARCHAR(128) NOT NULL,
   telegram VARCHAR(128) NULL,
-  city_id VARCHAR(128) NULL,
+  city_id INT NULL,
   avatar TINYTEXT NULL,
   description TEXT NULL,
-  status BOOL NOT NULL,
-  show_contacts BOOL NOT NULL,
-  FOREIGN KEY city_id REFERENCES cities (id)
+  status INT NOT NULL,
+  show_contacts INT NOT NULL,
+  FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 
 CREATE TABLE executor_categories (
@@ -48,7 +50,7 @@ CREATE TABLE tasks (
   title TINYTEXT NOT NULL,
   description TEXT NULL,
   category_id INT NOT NULL,
-  city_id VARCHAR(128) NULL,
+  city_id INT NULL,
   location VARCHAR(128) NULL,
   budget MEDIUMINT NULL,
   date_completion DATE NULL,  
