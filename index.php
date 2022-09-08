@@ -6,10 +6,10 @@ use taskforce\converterCsvToSql\QueriesInsert;
 
 $task1 = new Task(1, NULL, 'new');
 
-$table1 = new QueriesInsert("data\cities.csv", "cities1", "cities");
-$table2 = new QueriesInsert("data\categories.csv", "categories1", "categories");
-$table1->convertToSql();
-$table2->convertToSql();
+
+
+QueriesInsert::convertToSql("data\cities.csv", "data\cities.sql");
+QueriesInsert::convertToSql("data\categories.csv", "data\categories.sql");
 
 
 
