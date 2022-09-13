@@ -4,7 +4,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Taskforce\\": "src/"
+            "taskforce\\": "src/"
         }
     },
     "authors": [

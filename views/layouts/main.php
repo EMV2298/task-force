@@ -17,17 +17,17 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, 
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@web/favicon.ico']);
+$this->registerLinkTag(['rel' => 'stylesheet', 'href' => 'css/style.css']);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Taskforce</title>
-    <link rel="stylesheet" href="css/style.css">
+    <?=$this->head()?>
+    <title><?=Html::encode($this->title)?></title>    
 </head>
 <body>
+<?= $this->beginBody() ?>
 <header class="page-header">
     <nav class="main-nav">
         <a href='#' class="header-logo">
@@ -78,8 +78,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
         <?= $content ?>
     </div>
 </main>
-
+<?= $this->endBody() ?>
 </body>
 </html>
 
-<?php $this->endPage() ?>
+<?= $this->endPage() ?>
