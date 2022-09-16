@@ -1,11 +1,10 @@
 {
-    "name": "emv/taskforce",
-    "description": "freelance exchange",
-    "type": "taskforce",
+    "name": "taskforce/chack",
+    "description": "taskforce",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "taskforce\\": "classes/"
+            "taskforce\\": "src/"
         }
     },
     "authors": [
@@ -14,5 +13,10 @@
             "email": "emv2298@icloud.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "config": {
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
+        }
+    }
 }
