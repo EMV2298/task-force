@@ -40,7 +40,7 @@ class Task
     $this->status = $status;
   }
 
-  public function getAllStatuses()
+  public static function getAllStatuses()
   {
     return [
       self::STATUS_NEW => 'новый',
