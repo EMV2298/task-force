@@ -2,6 +2,7 @@
 /** @var yii\web\View $this */
 /** @var app\models\Task $tasks */
 
+use yii\helpers\Html;
 $this->title = "Taskforce";
 
 ?>
@@ -11,14 +12,14 @@ $this->title = "Taskforce";
         <?php foreach($tasks as $task): ?>
         <div class="task-card">
             <div class="header-task">
-                <a  href="#" class="link link--block link--big"><?=$task->title ?></a>
-                <p class="price price--task"><?=$task->budget ?> ₽</p>
+                <a  href="#" class="link link--block link--big"><?= HTML::encode($task->title) ?></a>
+                <p class="price price--task"><?= HTML::encode($task->budget) ?> ₽</p>
             </div>
-            <p class="info-text"><?= Yii::$app->formatter->asRelativeTime(strtotime($task->dt_add)) ?></p>
-            <p class="task-text"><?=$task->description ?></p>
+            <p class="info-text"><?= Yii::$app->formatter->asRelativeTime(strtotime(HTML::encode($task->dt_add))) ?></p>
+            <p class="task-text"><?= HTML::encode($task->description) ?></p>
             <div class="footer-task">
-                <p class="info-text town-text"><?=$task->city->name ?></p>
-                <p class="info-text category-text"><?=$task->category->name ?></p>
+                <p class="info-text town-text"><?= HTML::encode($task->city->name) ?></p>
+                <p class="info-text category-text"><?= HTML::encode($task->category->name) ?></p>
                 <a href="#" class="button button--black">Смотреть Задание</a>
             </div>
         </div>
