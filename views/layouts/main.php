@@ -74,9 +74,7 @@ $this->registerLinkTag(['rel' => 'stylesheet', 'href' => 'css/style.css']);
 </header>
 
 <main class="main-content container">
-    <div class="left-column">
         <?= $content ?>
-    </div>
 </main>
 <?= $this->endBody() ?>
 </body>
