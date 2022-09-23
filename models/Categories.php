@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "categories".
@@ -77,4 +78,15 @@ class Categories extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Users::class, ['id' => 'user_id'])->viaTable('executor_categories', ['category_id' => 'id']);
     }
+
+    public static function getCategories(): array
+    {
+        $categories = static::find()
+            ->select(['id', 'name'])
+            ->orderBy('id')
+            ->asArray()
+            ->all();
+        return ArrayHelper::map($categories, 'id', 'name');
+    }
+
 }

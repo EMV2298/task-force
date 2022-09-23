@@ -30,7 +30,7 @@ use Yii;
  * @property Reviews[] $reviews
  */
 class Tasks extends \yii\db\ActiveRecord
-{
+{   
     /**
      * {@inheritdoc}
      */
