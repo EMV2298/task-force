@@ -4,8 +4,6 @@ namespace app\controllers;
 
 use app\models\form\FilterTasks;
 use yii\web\Controller;
-use app\models\Tasks;
-use taskforce\business\Task;
 use Yii;
 
 class TasksController extends Controller
@@ -16,8 +14,8 @@ class TasksController extends Controller
 
     $model = new FilterTasks();
 
-    if (Yii::$app->request->getIsPost()) {
-      $model->load(Yii::$app->request->post());
+    if (Yii::$app->request->getIsGet()) {
+      $model->load(Yii::$app->request->get());
     }
 
     $tasks = $model->getTasks();

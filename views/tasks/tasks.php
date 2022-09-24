@@ -57,6 +57,7 @@ $this->title = "Taskforce";
             <h4 class="head-card">Категории</h4>
             
             <?php $form = ActiveForm::begin([
+                'method' => 'get',
                 'id' => 'filterTasks',
                 'fieldConfig' => ['template' => '{input}']
             ]);
