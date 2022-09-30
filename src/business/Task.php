@@ -43,7 +43,7 @@ class Task
   public static function getAllStatuses()
   {
     return [
-      self::STATUS_NEW => 'новый',
+      self::STATUS_NEW => 'Новый',
       self::STATUS_CANCELED => 'Отменено',
       self::STATUS_IN_PROGRESS => 'В работе',
       self::STATUS_DONE => 'Выполнено',

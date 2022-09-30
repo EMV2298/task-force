@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use taskforce\business\Task;
 use Yii;
 
 /**
@@ -125,7 +126,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getReviews()
+    public function getCustomerReviews()
     {
         return $this->hasMany(Reviews::class, ['customer_id' => 'id']);
     }
@@ -135,7 +136,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getReviews0()
+    public function getExecutorReviews()
     {
         return $this->hasMany(Reviews::class, ['executor_id' => 'id']);
     }
@@ -168,5 +169,33 @@ class Users extends \yii\db\ActiveRecord
     public function getTasks1()
     {
         return $this->hasMany(Tasks::class, ['id' => 'task_id'])->viaTable('offers', ['executor_id' => 'id']);
+    }
+
+    public function getAge() {
+
+        $age = date_diff(date_create(date('Y-m-d')), date_create($this->dob));
+
+        return $age->format("%y");
+    }
+
+    public function getCountDoneTasks() {
+
+       return Tasks::find()->where(['executor_id' => $this->id, 'status' => Task::STATUS_DONE])->count();
+        
+        
+    }
+    public function getCountFailTasks() {
+
+        return Tasks::find()->where(['executor_id' => $this->id, 'status' => Task::STATUS_FAIL])->count();        
+         
+     }
+    
+    public function getPositionInRating() {
+        
+        $rank = Users::find()
+        ->select('ROW_NUMBER() OVER (ORDER BY rating DESC) as number')
+        ->indexBy('id')
+        ->column();  
+        return $rank[$this->id];
     }
 }

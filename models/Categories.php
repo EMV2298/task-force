@@ -82,11 +82,10 @@ class Categories extends \yii\db\ActiveRecord
     public static function getCategories(): array
     {
         $categories = static::find()
-            ->select(['id', 'name'])
-            ->orderBy('id')
-            ->asArray()
-            ->all();
-        return ArrayHelper::map($categories, 'id', 'name');
+            ->select('name')
+            ->indexBy('id')
+            ->column();           
+        return $categories;
     }
 
 }
