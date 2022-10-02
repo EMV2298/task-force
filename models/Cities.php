@@ -69,4 +69,13 @@ class Cities extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Users::class, ['city_id' => 'id']);
     }
+
+    public static function getCities(): array
+    {
+        $cities = static::find()
+            ->select('name')
+            ->indexBy('id')
+            ->column();           
+        return $cities;
+    }
 }

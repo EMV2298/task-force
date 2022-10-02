@@ -45,23 +45,6 @@ class Users extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
-        return [
-            [['dt_add', 'dob'], 'safe'],
-            [['name', 'email', 'dob', 'password', 'phonenumber', 'status', 'show_contacts'], 'required'],
-            [['city_id', 'status', 'show_contacts'], 'integer'],
-            [['avatar', 'description'], 'string'],
-            [['name'], 'string', 'max' => 64],
-            [['email', 'password', 'phonenumber', 'telegram'], 'string', 'max' => 128],
-            [['email'], 'unique'],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::class, 'targetAttribute' => ['city_id' => 'id']],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
