@@ -8,7 +8,7 @@ use Yii;
 use yii\web\Controller;
 
 
-class RegistrationController extends Controller {
+class RegistrationController extends NotSecuredController {
 
   public function actionIndex() {
 
@@ -16,14 +16,14 @@ class RegistrationController extends Controller {
 
     if (Yii::$app->request->getIsPost()){
       $model->load(Yii::$app->request->post());
-    }
-
-    if ($model->validate()) {
-
-      if (!$model->saveUser()->save()){
-        throw new ErrorException('Не удалось сохранить данные');
+      
+      if ($model->validate()) {
+        
+        if (!$model->saveUser()->save()){
+          throw new ErrorException('Не удалось сохранить данные');
+        }
       }
-
+        
       Yii::$app->response->redirect(['tasks']);
     }
 

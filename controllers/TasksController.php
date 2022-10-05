@@ -2,14 +2,12 @@
 
 namespace app\controllers;
 
-use app\models\Cities;
 use app\models\form\FilterTasks;
 use app\models\Tasks;
-use yii\web\Controller;
 use Yii;
 use yii\web\NotFoundHttpException;
 
-class TasksController extends Controller
+class TasksController extends SecuredController
 {
   public function actionIndex()
   {

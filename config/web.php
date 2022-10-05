@@ -6,8 +6,10 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'language' => 'ru-RU',
     'id' => 'basic',
-    'basePath' => dirname(__DIR__),
+    'basePath' => dirname(__DIR__),    
     'bootstrap' => ['log'],
+    'homeUrl' => 'tasks',
+    'defaultRoute' => 'login',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -21,7 +23,8 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\Users',
+            'loginUrl' => 'login',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -50,7 +53,7 @@ $config = [
             'enableStrictParsing' => false,
             'rules' => [
                 'tasks/view/<id:\d+>' => 'tasks/view',
-                'user/view/<id:\d+>' => 'user/view'
+                'user/view/<id:\d+>' => 'user/view',                
             ],
         ],
         

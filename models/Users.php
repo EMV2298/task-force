@@ -4,6 +4,7 @@ namespace app\models;
 
 use taskforce\business\Task;
 use Yii;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "users".
@@ -32,7 +33,7 @@ use Yii;
  * @property Tasks[] $tasks0
  * @property Tasks[] $tasks1
  */
-class Users extends \yii\db\ActiveRecord
+class Users extends \yii\db\ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -180,5 +181,30 @@ class Users extends \yii\db\ActiveRecord
         ->indexBy('id')
         ->column();  
         return $rank[$this->id];
+    }
+
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
+    }
+
+    public function getAuthKey()
+    {
+        // TODO: Implement getAuthKey() method.
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        // TODO: Implement validateAuthKey() method.
     }
 }

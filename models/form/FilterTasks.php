@@ -28,7 +28,7 @@ class FilterTasks extends Model
     $tasks->leftJoin('offers', 'offers.task_id = tasks.id');
     $tasks->andFilterWhere(['status' => Task::STATUS_NEW]);
 
-    if (assert(count($this->categories) > 0)) {
+    if (is_array($this->categories) && count($this->categories) > 0) {
       $tasks->andFilterWhere(['category_id' => $this->categories]);
     }
 
