@@ -2,10 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\form\AddTask;
 use app\models\form\FilterTasks;
 use app\models\Tasks;
 use Yii;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 
 class TasksController extends SecuredController
 {
@@ -32,5 +34,19 @@ class TasksController extends SecuredController
     }
 
     return $this->render('view', ['task' => $task]);
+  }
+
+  public function actionAdd()
+  {
+    
+    $model = new AddTask();
+    if (Yii::$app->request->getIsPost()){
+      $model->load(Yii::$app->request->post());
+     if ($model->validate()){
+        $model->saveTask();    
+     
+     }
+    }
+    return $this->render('add', ['model' => $model]);
   }
 }

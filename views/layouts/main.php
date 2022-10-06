@@ -16,7 +16,7 @@ $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_k
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@web/favicon.ico']);
 
 $id = \Yii::$app->user->getId();
-$user = Users::findOne($id);
+$user = Yii::$app->user->getIdentity();
 
 ?>
 <?php $this->beginPage() ?>
