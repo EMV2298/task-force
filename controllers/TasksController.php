@@ -7,10 +7,29 @@ use app\models\form\FilterTasks;
 use app\models\Tasks;
 use Yii;
 use yii\web\NotFoundHttpException;
-use yii\web\UploadedFile;
 
 class TasksController extends SecuredController
 {
+
+  public function behaviors()
+    {
+        $rules = parent::behaviors();
+        $rule = [
+            'allow' => false,
+            'actions' => ['add'],
+            'matchCallback' => function ($rule, $action) {
+
+                $isExecutor = Yii::$app->user->getIdentity()->is_executor;
+
+                return empty($isExecutor) ? false : true;
+            }
+        ];
+
+        array_unshift($rules['access']['rules'], $rule);
+
+        return $rules;
+    }
+
   public function actionIndex()
   {
 
@@ -43,7 +62,9 @@ class TasksController extends SecuredController
     if (Yii::$app->request->getIsPost()){
       $model->load(Yii::$app->request->post());
      if ($model->validate()){
-        $model->saveTask();    
+        $model->saveTask();
+        
+        return Yii::$app->response->redirect(['tasks']);
      
      }
     }
