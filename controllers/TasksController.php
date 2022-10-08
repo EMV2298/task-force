@@ -4,8 +4,13 @@ namespace app\controllers;
 
 use app\models\form\AddTask;
 use app\models\form\FilterTasks;
+use app\models\Offers;
 use app\models\Tasks;
+use taskforce\business\Task;
+use taskforce\exception\TaskActionException;
+use taskforce\exception\TaskAddException;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 
 class TasksController extends SecuredController
@@ -46,13 +51,22 @@ class TasksController extends SecuredController
 
   public function actionView (int $id)
   {
+    $userId = Yii::$app->user->getId();
     $task = Tasks::findOne($id);
+
+    $dataProvider = new ActiveDataProvider([
+      'query' => Offers::find()->andFilterWhere(['task_id' => $task->id]),      
+      'sort' => ['defaultOrder' => ['dt_add' => SORT_DESC]]
+  ]);
+  if ($task->customer_id !== $userId){
+    $dataProvider->query->andFilterWhere(['executor_id' => $userId]);
+  }
 
     if (!$task) {
       throw new NotFoundHttpException('Задание не найдено');
     }
 
-    return $this->render('view', ['task' => $task]);
+    return $this->render('view', ['task' => $task, 'dataProvider' => $dataProvider]);
   }
 
   public function actionAdd()
@@ -70,4 +84,34 @@ class TasksController extends SecuredController
     }
     return $this->render('add', ['model' => $model]);
   }
+
+  public function actionDenied($task, $user)
+  {
+    
+    $customer = Tasks::findOne($task)->customer_id;
+    if ($customer === Yii::$app->user->getId())
+    {
+      $offer = Offers::find()->andFilterWhere(['task_id' => $task, 'executor_id' => $user])->one();
+      $offer->denied = 1;
+      $offer->save();
+      return $this->redirect(Yii::$app->request->referrer);
+    }
+  }
+
+  public function actionAccess($task, $user)
+  {
+    $task = Tasks::findOne($task);
+
+    if ($task->customer_id === Yii::$app->user->getId())
+    {      
+      if($task->addExecutor($user))
+      {
+        return $this->redirect(Yii::$app->request->referrer);
+      }
+    }
+
+    throw new TaskActionException('Не удалось совершить дейсвие');
+
+  }
+
 }

@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use taskforce\business\Task;
 use Yii;
 
 /**
@@ -156,5 +157,13 @@ class Tasks extends \yii\db\ActiveRecord
     public function getReviews()
     {
         return $this->hasMany(Reviews::class, ['task_id' => 'id']);
+    }
+
+    public function addExecutor($executorId)
+    { 
+        $this->executor_id = $executorId;
+        $this->status = Task::STATUS_IN_PROGRESS;
+            
+        return $this->save();
     }
 }

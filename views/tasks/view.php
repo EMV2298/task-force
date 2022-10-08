@@ -1,7 +1,12 @@
 <?php
 
+use app\widgets\ActionWidget;
 use taskforce\business\Task;
 use yii\helpers\Html;
+use yii\widgets\ListView;
+$userId = Yii::$app->user->getId();
+$taskRules = new Task($task->customer_id, $task->executor_id, $task->status);
+$action = $taskRules->getAvailableActions($userId);
 
 ?>
 <main class="main-content container">
@@ -11,47 +16,24 @@ use yii\helpers\Html;
             <p class="price price--big"><?= HTML::encode($task->budget ?? ''); ?>₽</p>
         </div>
         <p class="task-description"><?= HTML::encode($task->description ?? ''); ?></p>
-        <?php if ($task->status === Task::STATUS_NEW): ?>
-        <a href="#" class="button button--blue action-btn" data-action="act_response">Откликнуться на задание</a>
-        <?php endif; ?>
-        <?php if ($task->status === Task::STATUS_IN_PROGRESS): ?>
-        <a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>
-        <?php endif; ?>
-        <?php if ($task->status === Task::STATUS_IN_PROGRESS): ?>
-        <a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>
-        <?php endif; ?>
+        
+         <?php if(!empty($action))
+            {
+            echo ActionWidget::widget(['action' => $action]);
+            } ?>
         <div class="task-map">
             <img class="map" src="/img/map.png" width="725" height="346" alt="Новый арбат, 23, к. 1">
             <p class="map-address town"><?= HTML::encode($task->city->name ?? ''); ?></p>
             <p class="map-address">Новый арбат, 23, к. 1</p>
         </div>
-        <?php if (count($task->offers) > 0): ?>
-        <h4 class="head-regular">Отклики на задание</h4>
-        <?php foreach ($task->offers as $offer) : ?>
-            <div class="response-card">
-                <img class="customer-photo" src="<?= HTML::encode($offer->executor->avatar ?? ''); ?>" width="146" height="156" alt="Фото заказчиков">
-                <div class="feedback-wrapper">
-                    <a href="#" class="link link--block link--big"><?= HTML::encode($offer->executor->name ?? ''); ?></a>
-                    <div class="response-wrapper">
-                        <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
-                        <p class="reviews"><?= count($offer->executor->executorReviews); ?> отзыва</p>
-                    </div>
-                    <p class="response-message">
-                        <?= HTML::encode($offer->message ?? ''); ?>
-                    </p>
-
-                </div>
-                <div class="feedback-wrapper">
-                    <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime(HTML::encode($offer->dt_add)) ?></span></p>
-                    <p class="price price--small"><?= HTML::encode($offer->price ?? ''); ?> ₽</p>
-                </div>
-                <div class="button-popup">
-                    <a href="#" class="button button--blue button--small">Принять</a>
-                    <a href="#" class="button button--orange button--small">Отказать</a>
-                </div>
-            </div>
-        <?php endforeach; ?>
-        <?php endif; ?>
+        <?php 
+            echo ListView::widget([
+                'dataProvider' => $dataProvider,
+                'itemView' => 'listViewOffer',
+                'layout' =>  '<h4 class="head-regular">Отклики на задание</h4>{items}',
+                'emptyText' => false,          
+            ]);
+        ?>
     </div>
     <div class="right-column">
         <div class="right-card black info-card">
@@ -98,6 +80,20 @@ use yii\helpers\Html;
         </div>
     </div>
 </section>
+<section class="pop-up pop-up--cancel pop-up--close">
+    <div class="pop-up--wrapper">
+        <h4>Отмена задания</h4>
+        <p class="pop-up-text">
+            <b>Внимание!</b><br>
+            Вы собираетесь отменить поиск исполнителя для этого задания           
+        </p>
+        <a class="button button--pop-up button--orange">Отказаться</a>
+        <div class="button-container">
+            <button class="button--close" type="button">Закрыть окно</button>
+        </div>
+    </div>
+</section>
+
 <section class="pop-up pop-up--completion pop-up--close">
     <div class="pop-up--wrapper">
         <h4>Завершение задания</h4>
