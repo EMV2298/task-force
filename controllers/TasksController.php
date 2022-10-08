@@ -2,13 +2,13 @@
 
 namespace app\controllers;
 
+
+use app\models\form\AddOffer;
 use app\models\form\AddTask;
 use app\models\form\FilterTasks;
 use app\models\Offers;
 use app\models\Tasks;
-use taskforce\business\Task;
 use taskforce\exception\TaskActionException;
-use taskforce\exception\TaskAddException;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
@@ -29,7 +29,17 @@ class TasksController extends SecuredController
                 return empty($isExecutor) ? false : true;
             }
         ];
+        $ruleOffer = [
+          'allow' => false,
+          'actions' => ['offer'],
+          'matchCallback' => function ($rule, $action) {
+              $isExecutor = Yii::$app->user->getIdentity()->is_executor;
+              return empty($isExecutor) ? true : false;
+          }
+        ];
 
+        
+        array_unshift($rules['access']['rules'], $ruleOffer);
         array_unshift($rules['access']['rules'], $rule);
 
         return $rules;
@@ -48,11 +58,12 @@ class TasksController extends SecuredController
 
     return $this->render('tasks', ['tasks' => $tasks, 'model' => $model]);
   }
-
+  
   public function actionView (int $id)
   {
     $userId = Yii::$app->user->getId();
     $task = Tasks::findOne($id);
+    $offerModel = new AddOffer();
 
     $dataProvider = new ActiveDataProvider([
       'query' => Offers::find()->andFilterWhere(['task_id' => $task->id]),      
@@ -66,9 +77,9 @@ class TasksController extends SecuredController
       throw new NotFoundHttpException('Задание не найдено');
     }
 
-    return $this->render('view', ['task' => $task, 'dataProvider' => $dataProvider]);
+    return $this->render('view', ['task' => $task, 'dataProvider' => $dataProvider, 'offerModel' => $offerModel]);
   }
-
+  
   public function actionAdd()
   {
     
@@ -112,6 +123,26 @@ class TasksController extends SecuredController
 
     throw new TaskActionException('Не удалось совершить дейсвие');
 
+  }
+
+  public function actionOffer()
+  {
+    $offerModel = new AddOffer();
+
+    if (Yii::$app->request->getIsPost())
+    {
+      $offerModel->load(Yii::$app->request->post()); 
+
+      if ($offerModel->validate())
+      {
+        if($offerModel->saveOffer())
+        {
+          return $this->redirect(Yii::$app->request->referrer);
+        }
+      }
+    }
+    throw new TaskActionException('Действие не доступно');
+    
   }
 
 }

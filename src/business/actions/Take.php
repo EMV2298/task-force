@@ -3,6 +3,7 @@
 namespace taskforce\business\actions;
 
 use taskforce\business\Task;
+use Yii;
 
 class Take extends Actions {
   
@@ -28,7 +29,8 @@ class Take extends Actions {
 
   public static function checkAccess(int $userId, int $customerId, ?int $executorId): bool
   {
-    return $userId !== $customerId && !$executorId;
+    $isExecutor = Yii::$app->user->getIdentity()->is_executor;
+    return $userId !== $customerId && !$executorId && $isExecutor;
   }
 
 }

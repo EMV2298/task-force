@@ -3,6 +3,7 @@
 use app\widgets\ActionWidget;
 use taskforce\business\Task;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\widgets\ListView;
 $userId = Yii::$app->user->getId();
 $taskRules = new Task($task->customer_id, $task->executor_id, $task->status);
@@ -125,17 +126,19 @@ $action = $taskRules->getAvailableActions($userId);
             Пожалуйста, укажите стоимость работы и добавьте комментарий, если необходимо.
         </p>
         <div class="addition-form pop-up--form regular-form">
-            <form>
-                <div class="form-group">
-                    <label class="control-label" for="addition-comment">Ваш комментарий</label>
-                    <textarea id="addition-comment"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="addition-price">Стоимость</label>
-                    <input id="addition-price" type="text">
-                </div>
-                <input type="submit" class="button button--pop-up button--blue" value="Завершить">
-            </form>
+        <?php $form = ActiveForm::begin([
+            'id' => 'offer',
+            'action' => Yii::$app->urlManager->createUrl(['tasks/offer']),          
+            'fieldConfig' => [
+              'template' => "{label}{input}",              
+            ],
+        ]);           
+            echo $form->field($offerModel, 'message')->textarea();           
+            echo $form->field($offerModel, 'price');
+            echo $form->field($offerModel, 'taskId', ['template' => '{input}', 'options' => ['tag' => false]])->hiddenInput(['value' => $task->id]);
+        ?>        
+            <input type="submit" class="button button--pop-up button--blue" value="Завершить">
+            <?php ActiveForm::end(); ?>
         </div>
         <div class="button-container">
             <button class="button--close" type="button">Закрыть окно</button>
