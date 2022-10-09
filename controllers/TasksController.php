@@ -6,8 +6,11 @@ namespace app\controllers;
 use app\models\form\AddOffer;
 use app\models\form\AddTask;
 use app\models\form\FilterTasks;
+use app\models\form\ReviewForm;
 use app\models\Offers;
+use app\models\Reviews;
 use app\models\Tasks;
+use taskforce\business\Task;
 use taskforce\exception\TaskActionException;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -21,7 +24,7 @@ class TasksController extends SecuredController
         $rules = parent::behaviors();
         $rule = [
             'allow' => false,
-            'actions' => ['add'],
+            'actions' => ['add', 'reviews'],
             'matchCallback' => function ($rule, $action) {
 
                 $isExecutor = Yii::$app->user->getIdentity()->is_executor;
@@ -37,7 +40,6 @@ class TasksController extends SecuredController
               return empty($isExecutor) ? true : false;
           }
         ];
-
         
         array_unshift($rules['access']['rules'], $ruleOffer);
         array_unshift($rules['access']['rules'], $rule);
@@ -61,9 +63,12 @@ class TasksController extends SecuredController
   
   public function actionView (int $id)
   {
+    $sum = Tasks::find()->where(['executor_id' => 4, 'status' => Task::STATUS_FAIL])->count('id');
+    print($sum);
     $userId = Yii::$app->user->getId();
     $task = Tasks::findOne($id);
     $offerModel = new AddOffer();
+    $reviewModel = new ReviewForm();
 
     $dataProvider = new ActiveDataProvider([
       'query' => Offers::find()->andFilterWhere(['task_id' => $task->id]),      
@@ -77,7 +82,7 @@ class TasksController extends SecuredController
       throw new NotFoundHttpException('Задание не найдено');
     }
 
-    return $this->render('view', ['task' => $task, 'dataProvider' => $dataProvider, 'offerModel' => $offerModel]);
+    return $this->render('view', ['task' => $task, 'dataProvider' => $dataProvider, 'offerModel' => $offerModel, 'reviewModel' => $reviewModel]);
   }
   
   public function actionAdd()
@@ -145,4 +150,19 @@ class TasksController extends SecuredController
     
   }
 
+  public function actionReview()
+  {  
+    
+    $review = new ReviewForm();
+    if (Yii::$app->request->getIsPost())
+    {
+      $review->load(Yii::$app->request->post());
+      if($review->validate())
+      {
+        $review->saveReview();
+        return $this->redirect(Yii::$app->request->referrer);
+      }
+    }
+    throw new TaskActionException('Не удалось завершить задание');
+  }
 }

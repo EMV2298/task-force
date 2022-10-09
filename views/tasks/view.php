@@ -1,6 +1,7 @@
 <?php
 
 use app\widgets\ActionWidget;
+use kartik\rating\StarRating;
 use taskforce\business\Task;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -103,15 +104,32 @@ $action = $taskRules->getAvailableActions($userId);
             Пожалуйста, оставьте отзыв об исполнителе и отметьте отдельно, если возникли проблемы.
         </p>
         <div class="completion-form pop-up--form regular-form">
-            <form>
-                <div class="form-group">
-                    <label class="control-label" for="completion-comment">Ваш комментарий</label>
-                    <textarea id="completion-comment"></textarea>
-                </div>
-                <p class="completion-head control-label">Оценка работы</p>
-                <div class="stars-rating big active-stars"><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span></div>
-                <input type="submit" class="button button--pop-up button--blue" value="Завершить">
-            </form>
+        <?php $form = ActiveForm::begin([
+            'id' => 'offer',
+            'action' => Yii::$app->urlManager->createUrl(['tasks/review']),          
+            'fieldConfig' => [
+              'template' => "{label}{input}",              
+            ],
+        ]);           
+            echo $form->field($reviewModel, 'message')->textarea();?>
+        
+            <label class="control-label">Оценка работы</label>
+            <div class="card-rate">
+
+                <?php echo StarRating::widget([
+                    'model' => $reviewModel, 
+                    'attribute' => 'rating',
+                    'pluginOptions' => [
+                        'step' => '1',                               
+                        'filledStar' => '<img src="/img/star-fill.svg"></img>',
+                        'emptyStar' => '<img src="/img/star-empty.svg"></img>',                                      
+                        'showClear' => false,
+                        'showCaption' => false,
+                    ], ]);?>
+            </div>
+            <?=$form->field($reviewModel, 'taskId', ['template' => '{input}', 'options' => ['tag' => false]])->hiddenInput(['value' => $task->id]);?>        
+            <input type="submit" class="button button--pop-up button--blue" value="Завершить">
+            <?php ActiveForm::end(); ?>
         </div>
         <div class="button-container">
             <button class="button--close" type="button">Закрыть окно</button>

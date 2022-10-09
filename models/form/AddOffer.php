@@ -30,8 +30,7 @@ class AddOffer extends Model
       [
         ['taskId', 'required'],
         ['message', 'string', 'max' => 100],
-        ['price', 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],
-        ['taskId', 'exist', 'targetClass' => Tasks::class, 'targetAttribute' => ['taskId' => 'id']],
+        ['price', 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],        
       ];
   }
 
