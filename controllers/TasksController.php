@@ -25,17 +25,15 @@ class TasksController extends SecuredController
         $rules = parent::behaviors();
         $rule = [
             'allow' => false,
-            'actions' => ['add', 'reviews'],
+            'actions' => ['add', 'reviews', 'cancel', 'denied'],
             'matchCallback' => function ($rule, $action) {
-
                 $isExecutor = Yii::$app->user->getIdentity()->is_executor;
-
                 return empty($isExecutor) ? false : true;
             }
         ];
         $ruleOffer = [
           'allow' => false,
-          'actions' => ['offer'],
+          'actions' => ['offer', 'reject', 'access'],
           'matchCallback' => function ($rule, $action) {
               $isExecutor = Yii::$app->user->getIdentity()->is_executor;
               return empty($isExecutor) ? true : false;
@@ -176,6 +174,17 @@ class TasksController extends SecuredController
       $user = Users::findOne($task->executor_id);
       $user->updateRating();
 
+      return $this->redirect(Yii::$app->request->referrer);
+    }
+    throw new TaskActionException('Действие не доступно');
+  }
+
+  public function actionCancel($task)
+  {
+    $task = Tasks::findOne($task);
+    if ($task && $task->customer_id === Yii::$app->user->getId() && $task->status === Task::STATUS_NEW)
+    {
+      $task->cancel();
       return $this->redirect(Yii::$app->request->referrer);
     }
     throw new TaskActionException('Действие не доступно');
