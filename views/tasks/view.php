@@ -76,7 +76,8 @@ $action = $taskRules->getAvailableActions($userId);
             Вы собираетесь отказаться от выполнения этого задания.<br>
             Это действие плохо скажется на вашем рейтинге и увеличит счетчик проваленных заданий.
         </p>
-        <a class="button button--pop-up button--orange">Отказаться</a>
+        <a href="<?= Yii::$app->urlManager->createUrl(['tasks/reject', 'task' => $task->id]) ?>"
+            class="button button--pop-up button--orange">Отказаться</a>
         <div class="button-container">
             <button class="button--close" type="button">Закрыть окно</button>
         </div>
@@ -89,7 +90,8 @@ $action = $taskRules->getAvailableActions($userId);
             <b>Внимание!</b><br>
             Вы собираетесь отменить поиск исполнителя для этого задания           
         </p>
-        <a class="button button--pop-up button--orange">Отказаться</a>
+        <a href="<?= Yii::$app->urlManager->createUrl(['tasks/cancel', 'task' => $task->id]) ?>" 
+            class="button button--pop-up button--orange">Отказаться</a>
         <div class="button-container">
             <button class="button--close" type="button">Закрыть окно</button>
         </div>

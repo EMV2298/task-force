@@ -10,6 +10,7 @@ use app\models\form\ReviewForm;
 use app\models\Offers;
 use app\models\Reviews;
 use app\models\Tasks;
+use app\models\Users;
 use taskforce\business\Task;
 use taskforce\exception\TaskActionException;
 use Yii;
@@ -165,4 +166,20 @@ class TasksController extends SecuredController
     }
     throw new TaskActionException('Не удалось завершить задание');
   }
+
+  public function actionReject($task)
+  {
+    $task = Tasks::findOne($task);
+    if ($task && $task->executor_id === Yii::$app->user->getId() && $task->status === Task::STATUS_IN_PROGRESS)
+    {
+      $task->reject();
+      $user = Users::findOne($task->executor_id);
+      $user->updateRating();
+
+      return $this->redirect(Yii::$app->request->referrer);
+    }
+    throw new TaskActionException('Действие не доступно');
+  }
+
+  
 }

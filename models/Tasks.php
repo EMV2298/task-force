@@ -148,5 +148,11 @@ class Tasks extends \yii\db\ActiveRecord
             
         return $this->save();
     }
+
+    public function reject()
+    {
+        $this->status = Task::STATUS_FAIL;
+        $this->save();        
+    }
     
 }

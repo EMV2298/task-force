@@ -212,7 +212,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     public function updateRating()
     {   
         $sum = Reviews::find()->where(['executor_id' => $this->id])->sum('rating');
-        $countReview = Reviews::find()->where('rating > 0')->andFilterWhere(['executor_id' => 4])->count('rating');        
+        $countReview = Reviews::find()->where('rating > 0')->andFilterWhere(['executor_id' => $this->id])->count('rating');        
         $countFail = Tasks::find()->where(['executor_id' => $this->id, 'status' => Task::STATUS_FAIL])->count('id');        
         $this->rating = $sum / ($countFail + $countReview);
         $this->save();
