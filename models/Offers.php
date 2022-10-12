@@ -39,6 +39,7 @@ class Offers extends \yii\db\ActiveRecord
             [['task_id', 'executor_id'], 'unique', 'targetAttribute' => ['task_id', 'executor_id']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::class, 'targetAttribute' => ['task_id' => 'id']],
             [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['executor_id' => 'id']],
+            ['denied', 'boolean'],
         ];
     }
 

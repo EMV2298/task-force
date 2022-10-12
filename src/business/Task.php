@@ -61,7 +61,7 @@ class Task
     ];
   }
 
-  public function getAvailableActions(int $userId): Actions
+  public function getAvailableActions(int $userId)
   {
     if ($this->status === self::STATUS_NEW && Cancel::checkAccess($userId, $this->customerId, $this->executorId)) {
       return new Cancel;
@@ -75,6 +75,7 @@ class Task
     if ($this->status === self::STATUS_IN_PROGRESS && Reject::checkAccess($userId, $this->customerId, $this->executorId)) {
       return new Reject;
     }
+    
   }
 
   public function getNextStatus(string $action): string

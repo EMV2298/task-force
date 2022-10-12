@@ -1,7 +1,14 @@
 <?php
 
+use app\widgets\ActionWidget;
+use kartik\rating\StarRating;
 use taskforce\business\Task;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use yii\widgets\ListView;
+$userId = Yii::$app->user->getId();
+$taskRules = new Task($task->customer_id, $task->executor_id, $task->status);
+$action = $taskRules->getAvailableActions($userId);
 
 ?>
 <main class="main-content container">
@@ -11,47 +18,24 @@ use yii\helpers\Html;
             <p class="price price--big"><?= HTML::encode($task->budget ?? ''); ?>₽</p>
         </div>
         <p class="task-description"><?= HTML::encode($task->description ?? ''); ?></p>
-        <?php if ($task->status === Task::STATUS_NEW): ?>
-        <a href="#" class="button button--blue action-btn" data-action="act_response">Откликнуться на задание</a>
-        <?php endif; ?>
-        <?php if ($task->status === Task::STATUS_IN_PROGRESS): ?>
-        <a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>
-        <?php endif; ?>
-        <?php if ($task->status === Task::STATUS_IN_PROGRESS): ?>
-        <a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>
-        <?php endif; ?>
+        
+         <?php if(!empty($action))
+            {
+            echo ActionWidget::widget(['action' => $action]);
+            } ?>
         <div class="task-map">
             <img class="map" src="/img/map.png" width="725" height="346" alt="Новый арбат, 23, к. 1">
             <p class="map-address town"><?= HTML::encode($task->city->name ?? ''); ?></p>
             <p class="map-address">Новый арбат, 23, к. 1</p>
         </div>
-        <?php if (count($task->offers) > 0): ?>
-        <h4 class="head-regular">Отклики на задание</h4>
-        <?php foreach ($task->offers as $offer) : ?>
-            <div class="response-card">
-                <img class="customer-photo" src="<?= HTML::encode($offer->executor->avatar ?? ''); ?>" width="146" height="156" alt="Фото заказчиков">
-                <div class="feedback-wrapper">
-                    <a href="#" class="link link--block link--big"><?= HTML::encode($offer->executor->name ?? ''); ?></a>
-                    <div class="response-wrapper">
-                        <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
-                        <p class="reviews"><?= count($offer->executor->executorReviews); ?> отзыва</p>
-                    </div>
-                    <p class="response-message">
-                        <?= HTML::encode($offer->message ?? ''); ?>
-                    </p>
-
-                </div>
-                <div class="feedback-wrapper">
-                    <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime(HTML::encode($offer->dt_add)) ?></span></p>
-                    <p class="price price--small"><?= HTML::encode($offer->price ?? ''); ?> ₽</p>
-                </div>
-                <div class="button-popup">
-                    <a href="#" class="button button--blue button--small">Принять</a>
-                    <a href="#" class="button button--orange button--small">Отказать</a>
-                </div>
-            </div>
-        <?php endforeach; ?>
-        <?php endif; ?>
+        <?php 
+            echo ListView::widget([
+                'dataProvider' => $dataProvider,
+                'itemView' => 'listViewOffer',
+                'layout' =>  '<h4 class="head-regular">Отклики на задание</h4>{items}',
+                'emptyText' => false,          
+            ]);
+        ?>
     </div>
     <div class="right-column">
         <div class="right-card black info-card">
@@ -92,12 +76,28 @@ use yii\helpers\Html;
             Вы собираетесь отказаться от выполнения этого задания.<br>
             Это действие плохо скажется на вашем рейтинге и увеличит счетчик проваленных заданий.
         </p>
-        <a class="button button--pop-up button--orange">Отказаться</a>
+        <a href="<?= Yii::$app->urlManager->createUrl(['tasks/reject', 'task' => $task->id]) ?>"
+            class="button button--pop-up button--orange">Отказаться</a>
         <div class="button-container">
             <button class="button--close" type="button">Закрыть окно</button>
         </div>
     </div>
 </section>
+<section class="pop-up pop-up--cancel pop-up--close">
+    <div class="pop-up--wrapper">
+        <h4>Отмена задания</h4>
+        <p class="pop-up-text">
+            <b>Внимание!</b><br>
+            Вы собираетесь отменить поиск исполнителя для этого задания           
+        </p>
+        <a href="<?= Yii::$app->urlManager->createUrl(['tasks/cancel', 'task' => $task->id]) ?>" 
+            class="button button--pop-up button--orange">Отказаться</a>
+        <div class="button-container">
+            <button class="button--close" type="button">Закрыть окно</button>
+        </div>
+    </div>
+</section>
+
 <section class="pop-up pop-up--completion pop-up--close">
     <div class="pop-up--wrapper">
         <h4>Завершение задания</h4>
@@ -106,15 +106,32 @@ use yii\helpers\Html;
             Пожалуйста, оставьте отзыв об исполнителе и отметьте отдельно, если возникли проблемы.
         </p>
         <div class="completion-form pop-up--form regular-form">
-            <form>
-                <div class="form-group">
-                    <label class="control-label" for="completion-comment">Ваш комментарий</label>
-                    <textarea id="completion-comment"></textarea>
-                </div>
-                <p class="completion-head control-label">Оценка работы</p>
-                <div class="stars-rating big active-stars"><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span></div>
-                <input type="submit" class="button button--pop-up button--blue" value="Завершить">
-            </form>
+        <?php $form = ActiveForm::begin([
+            'id' => 'offer',
+            'action' => Yii::$app->urlManager->createUrl(['tasks/review']),          
+            'fieldConfig' => [
+              'template' => "{label}{input}",              
+            ],
+        ]);           
+            echo $form->field($reviewModel, 'message')->textarea();?>
+        
+            <label class="control-label">Оценка работы</label>
+            <div class="card-rate">
+
+                <?php echo StarRating::widget([
+                    'model' => $reviewModel, 
+                    'attribute' => 'rating',
+                    'pluginOptions' => [
+                        'step' => '1',                               
+                        'filledStar' => '<img src="/img/star-fill.svg"></img>',
+                        'emptyStar' => '<img src="/img/star-empty.svg"></img>',                                      
+                        'showClear' => false,
+                        'showCaption' => false,
+                    ], ]);?>
+            </div>
+            <?=$form->field($reviewModel, 'taskId', ['template' => '{input}', 'options' => ['tag' => false]])->hiddenInput(['value' => $task->id]);?>        
+            <input type="submit" class="button button--pop-up button--blue" value="Завершить">
+            <?php ActiveForm::end(); ?>
         </div>
         <div class="button-container">
             <button class="button--close" type="button">Закрыть окно</button>
@@ -129,17 +146,19 @@ use yii\helpers\Html;
             Пожалуйста, укажите стоимость работы и добавьте комментарий, если необходимо.
         </p>
         <div class="addition-form pop-up--form regular-form">
-            <form>
-                <div class="form-group">
-                    <label class="control-label" for="addition-comment">Ваш комментарий</label>
-                    <textarea id="addition-comment"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="addition-price">Стоимость</label>
-                    <input id="addition-price" type="text">
-                </div>
-                <input type="submit" class="button button--pop-up button--blue" value="Завершить">
-            </form>
+        <?php $form = ActiveForm::begin([
+            'id' => 'offer',
+            'action' => Yii::$app->urlManager->createUrl(['tasks/offer']),          
+            'fieldConfig' => [
+              'template' => "{label}{input}",              
+            ],
+        ]);           
+            echo $form->field($offerModel, 'message')->textarea();           
+            echo $form->field($offerModel, 'price');
+            echo $form->field($offerModel, 'taskId', ['template' => '{input}', 'options' => ['tag' => false]])->hiddenInput(['value' => $task->id]);
+        ?>        
+            <input type="submit" class="button button--pop-up button--blue" value="Завершить">
+            <?php ActiveForm::end(); ?>
         </div>
         <div class="button-container">
             <button class="button--close" type="button">Закрыть окно</button>

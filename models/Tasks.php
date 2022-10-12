@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use taskforce\business\Task;
 use Yii;
 
 /**
@@ -37,24 +38,6 @@ class Tasks extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'tasks';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['dt_add', 'date_completion'], 'safe'],
-            [['customer_id', 'title', 'category_id', 'status'], 'required'],
-            [['customer_id', 'executor_id', 'category_id', 'city_id', 'budget'], 'integer'],
-            [['title', 'description', 'status'], 'string'],
-            [['location'], 'string', 'max' => 128],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['customer_id' => 'id']],
-            [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['executor_id' => 'id']],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categories::class, 'targetAttribute' => ['category_id' => 'id']],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::class, 'targetAttribute' => ['city_id' => 'id']],
-        ];
     }
 
     /**
@@ -157,4 +140,25 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Reviews::class, ['task_id' => 'id']);
     }
+
+    public function addExecutor($executorId)
+    { 
+        $this->executor_id = $executorId;
+        $this->status = Task::STATUS_IN_PROGRESS;
+            
+        return $this->save();
+    }
+
+    public function reject()
+    {
+        $this->status = Task::STATUS_FAIL;
+        $this->save();        
+    }
+
+    public function cancel()
+    {
+        $this->status = Task::STATUS_FAIL;
+        $this->save();
+    }
+    
 }

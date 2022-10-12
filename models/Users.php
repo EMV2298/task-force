@@ -4,6 +4,7 @@ namespace app\models;
 
 use taskforce\business\Task;
 use Yii;
+use yii\db\Query;
 use yii\web\IdentityInterface;
 
 /**
@@ -207,4 +208,14 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     {
         // TODO: Implement validateAuthKey() method.
     }
+
+    public function updateRating()
+    {   
+        $sum = Reviews::find()->where(['executor_id' => $this->id])->sum('rating');
+        $countReview = Reviews::find()->where('rating > 0')->andFilterWhere(['executor_id' => $this->id])->count('rating');        
+        $countFail = Tasks::find()->where(['executor_id' => $this->id, 'status' => Task::STATUS_FAIL])->count('id');        
+        $this->rating = $sum / ($countFail + $countReview);
+        $this->save();
+    }
 }
+
