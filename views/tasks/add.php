@@ -3,6 +3,10 @@
 use app\models\Categories;
 use yii\widgets\ActiveForm;
 
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js');
+$this->registerJsFile('/js/autoComplete.js');
+$this->registerCssFile('https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.02.min.css');
+
 ?>
 <main class="main-content main-content--center container">
     <div class="add-task-form regular-form">
@@ -21,7 +25,9 @@ use yii\widgets\ActiveForm;
                   echo $form->field($model, 'title');
                   echo $form->field($model, 'description')->textarea();
                   echo $form->field($model, 'category')->dropDownList(Categories::getCategories());
-                  echo $form->field($model, 'location')->textInput(['class' => 'location-icon']);                  
+                  echo $form->field($model, 'address')->textInput(['class' => 'location-icon']);
+                  echo $form->field($model, 'lat', ['template' => '{input}'])->hiddenInput();
+                  echo $form->field($model, 'long', ['template' => '{input}'])->hiddenInput();                  
                 ?>
 
             <div class="half-wrapper">
