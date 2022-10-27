@@ -10,6 +10,10 @@ $userId = Yii::$app->user->getId();
 $taskRules = new Task($task->customer_id, $task->executor_id, $task->status);
 $action = $taskRules->getAvailableActions($userId);
 
+$this->registerJsFile('https://api-maps.yandex.ru/2.1/?apikey=e666f398-c983-4bde-8f14-e3fec900592a&lang=ru_RU');
+$this->registerJsFile('/js/map.js');
+
+
 ?>
 <main class="main-content container">
     <div class="left-column">
@@ -19,15 +23,18 @@ $action = $taskRules->getAvailableActions($userId);
         </div>
         <p class="task-description"><?= HTML::encode($task->description ?? ''); ?></p>
         
-         <?php if(!empty($action))
+        <?php if(!empty($action))
             {
             echo ActionWidget::widget(['action' => $action]);
-            } ?>
+            }?>
+        <?php if ($task->lat && $task->long): ?>           
         <div class="task-map">
-            <img class="map" src="/img/map.png" width="725" height="346" alt="Новый арбат, 23, к. 1">
-            <p class="map-address town"><?= HTML::encode($task->city->name ?? ''); ?></p>
-            <p class="map-address">Новый арбат, 23, к. 1</p>
+        <div class="map" id="map"></div>
+        <input type="hidden" id="lat" value="<?= HTML::encode($task->lat); ?>">
+        <input type="hidden" id="long" value="<?= HTML::encode($task->long); ?>">           
+            <p class="map-address"><?= HTML::encode($task->address); ?></p>
         </div>
+        <?php endif; ?>
         <?php 
             echo ListView::widget([
                 'dataProvider' => $dataProvider,

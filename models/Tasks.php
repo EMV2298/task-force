@@ -3,6 +3,7 @@
 namespace app\models;
 
 use taskforce\business\Task;
+use taskforce\exception\TaskActionException;
 use Yii;
 
 /**
@@ -141,12 +142,16 @@ class Tasks extends \yii\db\ActiveRecord
         return $this->hasMany(Reviews::class, ['task_id' => 'id']);
     }
 
-    public function addExecutor($executorId)
-    { 
-        $this->executor_id = $executorId;
-        $this->status = Task::STATUS_IN_PROGRESS;
-            
-        return $this->save();
+    public function setExecutor($executorId)
+    {   
+        if (!$this->executor_id)
+        {
+            $this->executor_id = $executorId;
+            $this->status = Task::STATUS_IN_PROGRESS;
+                
+            return $this->save();
+        }
+        throw new TaskActionException('Исполнитель уже назначен');
     }
 
     public function reject()

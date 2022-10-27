@@ -90,11 +90,16 @@ class TasksController extends SecuredController
     $model = new AddTask();
     if (Yii::$app->request->getIsPost()){
       $model->load(Yii::$app->request->post());
-     if ($model->validate()){
-        $model->saveTask();
-        
-        return Yii::$app->response->redirect(['tasks']);
-     
+     if ($model->validate())
+     {
+        if($model->address && !$model->lat && !$model->long)
+        {
+          $locations = AutocompleteController::getGeocoderOptions($model->address);
+          $model->lat = $locations[0]['lat'];
+          $model->long = $locations[0]['long'];
+          $model->address = $locations[0]['address'];
+        }
+        $model->saveTask();     
      }
     }
     return $this->render('add', ['model' => $model]);

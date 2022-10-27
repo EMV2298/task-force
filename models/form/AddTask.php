@@ -3,6 +3,7 @@
 namespace app\models\form;
 
 use app\models\Categories;
+use app\models\Cities;
 use app\models\Files;
 use app\models\Tasks;
 use taskforce\business\Task;
@@ -16,10 +17,12 @@ class AddTask extends Model
   public $title;
   public $description;
   public $category;
-  public $location;
+  public $address;
   public $price;
   public $date;
   public $files;
+  public $lat;
+  public $long; 
 
   public $file_names;
 
@@ -30,7 +33,7 @@ class AddTask extends Model
         'title' => 'Опишите суть работы',
         'description' => 'Подробности задания',
         'category' => 'Категория',
-        'location' => 'Локация',
+        'address' => 'Локация',
         'price' => 'Бюджет',
         'date' => 'Срок исполнения',
         'files' => 'Файлы',
@@ -49,6 +52,7 @@ class AddTask extends Model
         ['date', 'date', 'format' => 'Y-m-d'],
         ['date', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>', 'type' => 'date'],
         ['files', 'file', 'maxFiles' => 4, 'maxSize' => 1024 * 1024 * 3],
+        [['lat', 'long', 'address'], 'safe']
       ];
   }
 
@@ -77,9 +81,15 @@ class AddTask extends Model
     $task->budget = $this->price;
     $task->date_completion = $this->date;
     $task->status = Task::STATUS_NEW;
+    if ($this->lat && $this->long) {
+      $task->lat = $this->lat;
+      $task->long = $this->long;
+      $task->address = $this->address;
+    }
     if (!$task->save()) {
       throw new TaskAddException('Не удалось загрузить обьявление');
     }
+    
 
     $this->file_names = $this->uploadFile(UploadedFile::getInstances($this, 'files'));
 

@@ -1,12 +1,14 @@
 <?php
 
 namespace app\widgets;
+
+use taskforce\business\actions\Actions;
 use yii\base\Widget;
 use yii\helpers\Html;
 
 class ActionWidget extends Widget
 {
-    public object $action;
+    public Actions $action;
 
     public function init()
     {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4f1904a5542fc5ff0119c0d4fa6c8883",
+    "content-hash": "d3bd41612c07d0783a7b55df72122736",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -932,6 +932,21 @@
                 }
             ],
             "time": "2022-08-29T12:24:10+00:00"
+        },
+        {
+            "name": "npm-asset/autocomplete.js",
+            "version": "v1.7.1",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:algolia/autocomplete.js.git",
+                "reference": "a95f06face48ca3ba23cdad9ae64891122c64773"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/algolia/autocomplete.js/zipball/a95f06face48ca3ba23cdad9ae64891122c64773",
+                "reference": "a95f06face48ca3ba23cdad9ae64891122c64773"
+            },
+            "type": "npm-asset"
         },
         {
             "name": "paragonie/random_compat",
