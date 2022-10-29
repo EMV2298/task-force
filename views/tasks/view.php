@@ -6,13 +6,10 @@ use taskforce\business\Task;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\ListView;
+
 $userId = Yii::$app->user->getId();
 $taskRules = new Task($task->customer_id, $task->executor_id, $task->status);
 $action = $taskRules->getAvailableActions($userId);
-
-$this->registerJsFile('https://api-maps.yandex.ru/2.1/?apikey=e666f398-c983-4bde-8f14-e3fec900592a&lang=ru_RU');
-$this->registerJsFile('/js/map.js');
-
 
 ?>
 <main class="main-content container">
