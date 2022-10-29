@@ -115,8 +115,10 @@ use yii\widgets\ActiveForm;
           echo $form->field($model, 'email')->textInput();      
           echo $form->field($model, 'password')->passwordInput();
           ?>
-
+            <a href="<?= Yii::$app->urlManager->createUrl('login/vk') ?>" target="_blank">
+                <img src="/img/vk-icon.png" style="width: 50px; height: 50px;">
+            </a>
             <button class="button" type="submit">Войти</button>
             <?php ActiveForm::end(); ?>
-        <button class="form-modal-close" type="button">Закрыть</button>
+            <button class="form-modal-close" type="button">Закрыть</button>
     </section>

@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use taskforce\Geocoder;
 use Yii;
 
 /**
@@ -77,5 +78,20 @@ class Cities extends \yii\db\ActiveRecord
             ->indexBy('id')
             ->column();           
         return $cities;
+    }
+    
+    public static function getCityId($cityName)
+    {
+        $city = self::findOne(['name' => $cityName]);
+        if (!$city)
+        {   
+            $cityGeo = Geocoder::getGeocoderOptions($cityName);            
+            $city = new self();
+            $city->name = $cityName;
+            $city->lat = $cityGeo['0']['lat'];
+            $city->lng = $cityGeo['0']['long'];           
+            $city->save();            
+        }
+        return $city->id;
     }
 }

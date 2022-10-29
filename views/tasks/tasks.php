@@ -5,7 +5,6 @@
 
 use app\models\Categories;
 use app\models\form\FilterTasks;
-use app\models\Tasks;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 

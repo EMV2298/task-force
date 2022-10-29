@@ -3,8 +3,8 @@ namespace app\controllers;
 
 use app\models\Users;
 use Yii;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+
 
 class UserController extends SecuredController
  {
@@ -20,7 +20,10 @@ class UserController extends SecuredController
 
   public function actionLogout()
   {
+    
     Yii::$app->user->logout();
     Yii::$app->response->redirect(['login']);
+    
   }
+  
 }
