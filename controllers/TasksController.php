@@ -2,17 +2,16 @@
 
 namespace app\controllers;
 
-
 use app\models\form\AddOffer;
 use app\models\form\AddTask;
 use app\models\form\FilterTasks;
 use app\models\form\ReviewForm;
 use app\models\Offers;
-use app\models\Reviews;
 use app\models\Tasks;
 use app\models\Users;
 use taskforce\business\Task;
 use taskforce\exception\TaskActionException;
+use taskforce\Geocoder;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
@@ -94,12 +93,16 @@ class TasksController extends SecuredController
      {
         if($model->address && !$model->lat && !$model->long)
         {
-          $locations = AutocompleteController::getGeocoderOptions($model->address);
+          $locations = Geocoder::getGeocoderOptions($model->address);
           $model->lat = $locations[0]['lat'];
           $model->long = $locations[0]['long'];
           $model->address = $locations[0]['address'];
         }
-        $model->saveTask();     
+        $taskId = $model->saveTask();
+        if($taskId)
+        {
+          $this->redirect("view/{$taskId}");
+        }
      }
     }
     return $this->render('add', ['model' => $model]);

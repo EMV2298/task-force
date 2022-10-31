@@ -3,10 +3,10 @@
 /** @var yii\web\View $this */
 /** @var string $content */
 
-use app\assets\AppAsset;
+use app\assets\LandingAsset;
 use yii\bootstrap5\Html;
 
-AppAsset::register($this);
+LandingAsset::register($this);
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
@@ -20,10 +20,8 @@ $this->registerJsFile('/js/landing.js');
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>TaskForce</title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/landing.css">
+    <?=$this->head()?>
+    <title><?=Html::encode($this->title)?></title> 
 </head>
 <body class="landing">
 <?php $this->beginBody(); ?>

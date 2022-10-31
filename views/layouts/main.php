@@ -3,11 +3,10 @@
 /** @var yii\web\View $this */
 /** @var string $content */
 
-use app\assets\AppAsset;
-use app\models\Users;
+use app\assets\MainAsset;
 use yii\bootstrap5\Html;
 
-AppAsset::register($this);
+MainAsset::register($this);
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
@@ -55,7 +54,7 @@ $user = Yii::$app->user->getIdentity();
     <?php if (Yii::$app->request->url !== '/registration'): ?>
     <div class="user-block">
         <a href="#">
-            <img class="user-photo" src="<?=Html::encode($user->avatar); ?>" width="55" height="55" alt="Аватар">
+            <img class="user-photo" src="/uploads/user-avatar/<?=Html::encode($user->avatar); ?>" width="55" height="55" alt="Аватар">
         </a>
         <div class="user-menu">
             <p class="user-name"><?=Html::encode($user->name); ?></p>

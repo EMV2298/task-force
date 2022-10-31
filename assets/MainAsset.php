@@ -7,6 +7,7 @@
 
 namespace app\assets;
 
+use taskforce\Geocoder;
 use yii\web\AssetBundle;
 
 /**
@@ -15,18 +16,21 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class AppAsset extends AssetBundle
+class MainAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/style.css',
+        '/css/style.css',
     ];
     public $js = [
-        'js/main.js'
+        'https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js',
+        'https://api-maps.yandex.ru/2.1/?apikey=' . Geocoder::API_KEY . '&lang=ru_RU',
+        'js/main.js',
+        '/js/map.js',        
+        '/js/autoComplete.js',        
     ];
     public $depends = [
-        'yii\web\YiiAsset',
-        //'yii\bootstrap5\BootstrapAsset'
+        'yii\web\YiiAsset',       
     ];
 }

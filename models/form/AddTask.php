@@ -72,7 +72,6 @@ class AddTask extends Model
 
   public function saveTask()
   {
-
     $task = new Tasks();
     $task->customer_id = Yii::$app->user->getId();
     $task->title = $this->title;
@@ -101,5 +100,6 @@ class AddTask extends Model
         $file->save();
       }
     }
+    return $task->id;
   }
 }

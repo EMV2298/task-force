@@ -5,8 +5,6 @@ namespace app\controllers;
 use app\models\form\Registration;
 use ErrorException;
 use Yii;
-use yii\web\Controller;
-
 
 class RegistrationController extends NotSecuredController {
 
