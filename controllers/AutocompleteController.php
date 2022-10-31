@@ -8,7 +8,8 @@ use taskforce\Geocoder;
 class AutocompleteController extends Controller
 {  
   public function actionIndex($address)
-  {    
-    return $this->asJson(Geocoder::getGeocoderOptions($address));
+  {   
+    $geocoder = new Geocoder();
+    return $this->asJson($geocoder->getGeocoderOptions($address));
   }
 }

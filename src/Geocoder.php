@@ -10,7 +10,7 @@ class Geocoder
 {
   const API_KEY = 'e666f398-c983-4bde-8f14-e3fec900592a';
   
-  public static function getGeocoderOptions ($address)
+  public function getGeocoderOptions (string $address): array
   {
     $apiUrl = 'https://geocode-maps.yandex.ru/';
     $apiController = '1.x';

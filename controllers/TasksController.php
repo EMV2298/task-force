@@ -93,7 +93,8 @@ class TasksController extends SecuredController
      {
         if($model->address && !$model->lat && !$model->long)
         {
-          $locations = Geocoder::getGeocoderOptions($model->address);
+          $geocoder = new Geocoder();
+          $locations = $geocoder->getGeocoderOptions($model->address);
           $model->lat = $locations[0]['lat'];
           $model->long = $locations[0]['long'];
           $model->address = $locations[0]['address'];
