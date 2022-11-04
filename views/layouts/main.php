@@ -4,7 +4,8 @@
 /** @var string $content */
 
 use app\assets\MainAsset;
-use yii\bootstrap5\Html;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 MainAsset::register($this);
 $this->registerCsrfMetaTags();
@@ -35,17 +36,17 @@ $user = Yii::$app->user->getIdentity();
     <?php if (Yii::$app->request->url !== '/registration'): ?>
         <div class="nav-wrapper">
             <ul class="nav-list">
-                <li class="list-item list-item--active">
-                    <a class="link link--nav" >Новое</a>
+                <li class="list-item <?=Yii::$app->request->url === '/tasks' ? 'list-item--active' : '' ;?>">
+                    <a href="<?= Yii::$app->urlManager->createUrl(['tasks']); ?>" class="link link--nav" >Новое</a>
                 </li>
-                <li class="list-item">
-                    <a href="#" class="link link--nav" >Мои задания</a>
+                <li class="list-item <?=Yii::$app->request->url === '/tasks/my' ? 'list-item--active' : '' ;?>">
+                    <a href="<?= Yii::$app->urlManager->createUrl(['tasks/my/new']); ?>" class="link link--nav" >Мои задания</a>
                 </li>
-                <li class="list-item">
-                    <a href="#" class="link link--nav" >Создать задание</a>
+                <li class="list-item <?=Yii::$app->request->url === '/tasks/add' ? 'list-item--active' : '' ;?>">
+                    <a href="<?= Yii::$app->urlManager->createUrl(['tasks/add']); ?>" class="link link--nav" >Создать задание</a>
                 </li>
-                <li class="list-item">
-                    <a href="#" class="link link--nav" >Настройки</a>
+                <li class="list-item <?=Yii::$app->request->url === '/user/setting' ? 'list-item--active' : '' ;?>">
+                    <a href="<?= Yii::$app->urlManager->createUrl(['user/setting']); ?>" class="link link--nav" >Настройки</a>
                 </li>
             </ul>
         </div>
