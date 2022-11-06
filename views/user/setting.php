@@ -4,6 +4,8 @@ use app\models\Categories;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+$this->title = 'Настройки';
+
 ?>
 <main class="main-content main-content--left container">
   <div class="left-menu left-menu--edit">

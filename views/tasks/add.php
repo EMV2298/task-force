@@ -3,6 +3,8 @@
 use app\models\Categories;
 use yii\widgets\ActiveForm;
 
+$this->title = 'Добавить';
+
 ?>
 <main class="main-content main-content--center container">
     <div class="add-task-form regular-form">

@@ -4,6 +4,8 @@ use taskforce\business\Task;
 use yii\helpers\Html;
 use yii\widgets\ListView;
 
+$this->title = 'Мои';
+
 ?>
 <main class="main-content container">
     <div class="left-menu">

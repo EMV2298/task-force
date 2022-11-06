@@ -36,16 +36,16 @@ $user = Yii::$app->user->getIdentity();
     <?php if (Yii::$app->request->url !== '/registration'): ?>
         <div class="nav-wrapper">
             <ul class="nav-list">
-                <li class="list-item <?=Yii::$app->request->url === '/tasks' ? 'list-item--active' : '' ;?>">
+                <li class="list-item <?=$this->title === 'Новые' ? 'list-item--active' : '' ;?>">
                     <a href="<?= Yii::$app->urlManager->createUrl(['tasks']); ?>" class="link link--nav" >Новое</a>
                 </li>
-                <li class="list-item <?=Yii::$app->request->url === '/tasks/my' ? 'list-item--active' : '' ;?>">
+                <li class="list-item <?=$this->title === 'Мои' ? 'list-item--active' : '' ;?>">
                     <a href="<?= Yii::$app->urlManager->createUrl(['tasks/my/new']); ?>" class="link link--nav" >Мои задания</a>
                 </li>
-                <li class="list-item <?=Yii::$app->request->url === '/tasks/add' ? 'list-item--active' : '' ;?>">
+                <li class="list-item <?=$this->title === 'Добавить' ? 'list-item--active' : '' ;?>">
                     <a href="<?= Yii::$app->urlManager->createUrl(['tasks/add']); ?>" class="link link--nav" >Создать задание</a>
                 </li>
-                <li class="list-item <?=Yii::$app->request->url === '/user/setting' ? 'list-item--active' : '' ;?>">
+                <li class="list-item <?=$this->title === 'Настройки' ? 'list-item--active' : '' ;?>">
                     <a href="<?= Yii::$app->urlManager->createUrl(['user/setting']); ?>" class="link link--nav" >Настройки</a>
                 </li>
             </ul>

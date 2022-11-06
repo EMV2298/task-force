@@ -8,7 +8,7 @@ use app\models\form\FilterTasks;
 use yii\widgets\ActiveForm;
 use yii\widgets\ListView;
 
-$this->title = "Taskforce";
+$this->title = "Новые";
 
 ?>
 <main class="main-content container">
