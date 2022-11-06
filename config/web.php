@@ -56,7 +56,8 @@ $config = [
                 'tasks/view/<id:\d+>' => 'tasks/view',
                 'user/view/<id:\d+>' => 'user/view',
                 'autocomplete/<address:.*>' => 'autocomplete',
-                'user/setting/<type:.*>' => 'user/setting'                                                                     
+                'user/setting/<type:.*>' => 'user/setting',
+                'download/<filename:.*>' => 'download',                                                                     
             ],
         ],
         

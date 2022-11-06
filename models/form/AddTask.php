@@ -62,7 +62,7 @@ class AddTask extends Model
     if (is_array($files) && count($files) && $this->validate()) {
       foreach ($files as $file) {
         $name = uniqid('task-file') . '.' . $file->getExtension();
-        if ($file->saveAs('@webroot/uploads/tasks-files' . $name)) {
+        if ($file->saveAs('@webroot/uploads/tasks-files/' . $name)) {
           $savedFiles[] = $name;
         }
       }
