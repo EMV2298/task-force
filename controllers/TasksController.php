@@ -57,9 +57,14 @@ class TasksController extends SecuredController
       $model->load(Yii::$app->request->get());
     }
 
-    $tasks = $model->getTasks();
+    $dataProvider = new ActiveDataProvider([
+      'query' => $model->getTasks(),
+      'pagination' => [
+          'pageSize' => self::PAGE_SIZE,
+      ],
+    ]); 
 
-    return $this->render('tasks', ['tasks' => $tasks, 'model' => $model]);
+    return $this->render('tasks', ['dataProvider' => $dataProvider, 'model' => $model]);
   }
   
   public function actionView (int $id)

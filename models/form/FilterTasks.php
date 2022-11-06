@@ -45,7 +45,7 @@ class FilterTasks extends Model
       $tasks->andWhere('tasks.dt_add >= NOW() - INTERVAL ' . $this->period);
     }
 
-    return $tasks->all();
+    return $tasks;
   }
 
   public function attributeLabels(): array
