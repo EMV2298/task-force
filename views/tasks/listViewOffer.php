@@ -1,5 +1,6 @@
 <?php
 
+use kartik\rating\StarRating;
 use taskforce\business\Task;
 use yii\helpers\Html;
 
@@ -7,9 +8,22 @@ use yii\helpers\Html;
 <div class="response-card">
     <img class="customer-photo" src="<?= Html::encode($model->executor->avatar ?? ''); ?>" width="146" height="156" alt="Фото заказчиков">
     <div class="feedback-wrapper">
-        <a href="#" class="link link--block link--big"><?= HTML::encode($model->users->name ?? ''); ?></a>
+        <a href="<?= Yii::$app->urlManager->createUrl(['user/view/', 'id' => $model->executor->id]); ?>" class="link link--block link--big"><?= HTML::encode($model->executor->name ?? ''); ?></a>
         <div class="response-wrapper">
-            <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
+            <div class="stars-rating">
+                        <?php echo StarRating::widget([
+                        'name' => 'rating_21',
+                        'value' => $model->executor->rating,
+                        'pluginOptions' => [
+                            'filledStar' => '<img style="background-size:18px; width:18px; height:28px;" src="/img/star-fill.svg"></img>',
+                            'emptyStar' => '<img style="background-size:18px; width:18px; height:28px;" src="/img/star-empty.svg"></img>',
+                            'size' => 'xs',
+                            'readonly' => true,
+                            'showClear' => false,
+                            'showCaption' => false,
+                        ],
+                    ]); ?>
+            </div>
             <p class="reviews"><?= count($model->executor->executorReviews); ?> отзыва</p>
         </div>
         <p class="response-message">

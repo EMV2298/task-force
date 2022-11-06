@@ -55,14 +55,14 @@ $user = Yii::$app->user->getIdentity();
     <?php if (Yii::$app->request->url !== '/registration'): ?>
     <div class="user-block">
         <a href="#">
-            <img class="user-photo" src="/uploads/user-avatar/<?=Html::encode($user->avatar); ?>" width="55" height="55" alt="Аватар">
+            <img class="user-photo" src="/uploads/user-avatar/<?=$user->avatar ? Html::encode($user->avatar) : '1.png' ; ?>" width="55" height="55" alt="Аватар">
         </a>
         <div class="user-menu">
             <p class="user-name"><?=Html::encode($user->name); ?></p>
             <div class="popup-head">
                 <ul class="popup-menu">
                     <li class="menu-item">
-                        <a href="#" class="link">Настройки</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(['user/setting']); ?>" class="link">Настройки</a>
                     </li>
                     <li class="menu-item">
                         <a href="#" class="link">Связаться с нами</a>
