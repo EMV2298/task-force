@@ -29,23 +29,23 @@ buttonsClose.forEach(function (el) {
 
 let buttonInput = document.querySelector('#button-input');
 
-// if (buttonInput) {
-//     buttonInput.addEventListener('change', function (evt) {
-//         const file = evt.target.files[0];
-//         const fileName = file.name.toLowerCase();
+if (buttonInput) {
+    buttonInput.addEventListener('change', function (evt) {
+        const file = evt.target.files[0];
+        const fileName = file.name.toLowerCase();
 
-//         const matches = FILE_TYPES.some(function (it) {
-//             return fileName.endsWith(it);
-//         });
-//         if (matches) {
-//             const reader = new FileReader();
-//             reader.addEventListener('load', function () {
-//                 imgPreviewElement.src = reader.result;
-//             });
-//             reader.readAsDataURL(file);
-//         }
-//     });
-// }
+        const matches = FILE_TYPES.some(function (it) {
+            return fileName.endsWith(it);
+        });
+        if (matches) {
+            const reader = new FileReader();
+            reader.addEventListener('load', function () {
+                imgPreviewElement.src = reader.result;
+            });
+            reader.readAsDataURL(file);
+        }
+    });
+}
 
 var starRating = document.querySelector(".active-stars");
 
