@@ -69,8 +69,6 @@ class TasksController extends SecuredController
   
   public function actionView (int $id)
   {
-    $sum = Tasks::find()->where(['executor_id' => 4, 'status' => Task::STATUS_FAIL])->count('id');
-    print($sum);
     $userId = Yii::$app->user->getId();
     $task = Tasks::findOne($id);
     $offerModel = new AddOffer();
