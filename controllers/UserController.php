@@ -1,10 +1,13 @@
 <?php
 namespace app\controllers;
 
+use app\models\Categories;
+use app\models\form\ChangePassword;
+use app\models\form\SettingUser;
 use app\models\Users;
 use Yii;
 use yii\web\NotFoundHttpException;
-
+use yii\web\UploadedFile;
 
 class UserController extends SecuredController
  {
@@ -24,6 +27,28 @@ class UserController extends SecuredController
     Yii::$app->user->logout();
     Yii::$app->response->redirect(['login']);
     
+  }
+
+  public function actionSetting()
+  {
+    $type = Yii::$app->request->get('type');
+
+    $model = $type === 'security' ? new ChangePassword() : new SettingUser();
+   
+    if (Yii::$app->request->getIsPost())
+    {
+      $model->load(Yii::$app->request->post());
+      $model->avatar = UploadedFile::getInstance($model, 'avatar');
+      if($model->validate())
+      {
+        if ($model->save())
+        {
+          Yii::$app->response->redirect(["user/view/" . Yii::$app->user->getId()]);
+        }        
+      }
+    }
+
+    return $this->render('setting', ['model' => $model]);
   }
   
 }

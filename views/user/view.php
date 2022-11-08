@@ -13,7 +13,7 @@ use yii\helpers\Html;
                 <div class="card-rate">
                     <?php echo StarRating::widget([
                         'name' => 'rating_21',
-                        'value' => 4.23,
+                        'value' => $user->rating,
                         'pluginOptions' => [
                             'filledStar' => '<img src="/img/star-fill.svg"></img>',
                             'emptyStar' => '<img src="/img/star-empty.svg"></img>',
@@ -22,11 +22,8 @@ use yii\helpers\Html;
                             'showClear' => false,
                             'showCaption' => false,
                         ],
-                    ]); ?><span class="current-rate">&nbsp;4.23</span>
+                    ]); ?><span class="current-rate">&nbsp;<?=$user->rating;?></span>
                 </div>
-
-
-
             </div>
             <p class="user-description">
                 <?= Html::encode($user->description); ?>
@@ -38,7 +35,7 @@ use yii\helpers\Html;
                 <ul class="special-list">
                     <?php foreach ($user->categories as $category) : ?>
                         <li class="special-item">
-                            <a href="#" class="link link--regular"><?= Html::encode($category->name); ?></a>
+                            <a href="<?= Yii::$app->urlManager->createUrl(['tasks/', 'FilterTasks[categories][]' => $category->id]); ?>" class="link link--regular"><?= Html::encode($category->name); ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -48,7 +45,9 @@ use yii\helpers\Html;
                 <p class="bio-info">
                     <span class="country-info">Россия</span>,
                     <span class="town-info"><?= Html::encode($user->city->name); ?></span>,
+                    <?php if ($user->dob):?>
                     <span class="age-info"><?= $user->age ?></span> лет
+                    <?php endif; ?>
                 </p>
             </div>
         </div>
@@ -65,7 +64,7 @@ use yii\helpers\Html;
                         <div>
                         <?php echo StarRating::widget([
                         'name' => 'rating_21',
-                        'value' => 3,
+                        'value' => $review->rating,
                         'pluginOptions' => [
                             'filledStar' => '<img style="background-size:18px; width:18px; height:28px;" src="/img/star-fill.svg"></img>',
                             'emptyStar' => '<img style="background-size:18px; width:18px; height:28px;" src="/img/star-empty.svg"></img>',
@@ -114,7 +113,7 @@ use yii\helpers\Html;
                     </li>
                     <?php if ($user->telegram) : ?>
                         <li class="enumeration-item">
-                            <a href="#" class="link link--block link--tg"><?= Html::encode($user->telegram); ?></a>
+                            <a href="https://t.me/<?=$user->telegram ;?>" class="link link--block link--tg"><?= Html::encode($user->telegram); ?></a>
                         </li>
                     <?php endif; ?>
                 </ul>

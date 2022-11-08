@@ -14,10 +14,13 @@ use taskforce\exception\TaskActionException;
 use taskforce\Geocoder;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
 class TasksController extends SecuredController
 {
+
+  const PAGE_SIZE = 5;
 
   public function behaviors()
     {
@@ -54,15 +57,18 @@ class TasksController extends SecuredController
       $model->load(Yii::$app->request->get());
     }
 
-    $tasks = $model->getTasks();
+    $dataProvider = new ActiveDataProvider([
+      'query' => $model->getTasks(),
+      'pagination' => [
+          'pageSize' => self::PAGE_SIZE,
+      ],
+    ]); 
 
-    return $this->render('tasks', ['tasks' => $tasks, 'model' => $model]);
+    return $this->render('tasks', ['dataProvider' => $dataProvider, 'model' => $model]);
   }
   
   public function actionView (int $id)
   {
-    $sum = Tasks::find()->where(['executor_id' => 4, 'status' => Task::STATUS_FAIL])->count('id');
-    print($sum);
     $userId = Yii::$app->user->getId();
     $task = Tasks::findOne($id);
     $offerModel = new AddOffer();
@@ -93,7 +99,8 @@ class TasksController extends SecuredController
      {
         if($model->address && !$model->lat && !$model->long)
         {
-          $locations = Geocoder::getGeocoderOptions($model->address);
+          $geocoder = new Geocoder();
+          $locations = $geocoder->getGeocoderOptions($model->address);
           $model->lat = $locations[0]['lat'];
           $model->long = $locations[0]['long'];
           $model->address = $locations[0]['address'];
@@ -198,5 +205,37 @@ class TasksController extends SecuredController
     throw new TaskActionException('Действие не доступно');
   }
 
-  
+  public function actionMy($type)
+  {    
+    if (in_array($type, [Task::STATUS_DONE, Task::STATUS_IN_PROGRESS, Task::STATUS_NEW], true))
+    {
+      $user = Yii::$app->user->getIdentity();
+      
+      if (!$user->is_executor || $type !== Task::STATUS_NEW)
+      {      
+        $userRole = $user->is_executor ? 'executor_id' : 'customer_id';     
+        $types = [
+          Task::STATUS_NEW => [Task::STATUS_NEW],
+          Task::STATUS_IN_PROGRESS => [Task::STATUS_IN_PROGRESS],
+          Task::STATUS_DONE => [Task::STATUS_DONE, Task::STATUS_FAIL, Task::STATUS_CANCELED]
+        ];      
+
+        $dataProvider = new ActiveDataProvider([
+          'query' => Tasks::find()->where([$userRole => $user->id])->andFilterWhere(['IN', 'status', $types[$type]]),
+          'pagination' => [
+              'pageSize' => self::PAGE_SIZE,
+          ],
+        ]);
+      
+        $titles = [
+          Task::STATUS_NEW => 'Новые задания',
+          Task::STATUS_IN_PROGRESS => 'Задания в процессе',
+          Task::STATUS_DONE => 'Закрытые задания'
+        ];
+
+        return $this->render('my', ['dataProvider' => $dataProvider, 'type' => $type, 'title' => $titles[$type]]);
+      }      
+    }
+      throw new ForbiddenHttpException('Нет доступного действия');
+  }  
 }

@@ -4,7 +4,8 @@
 /** @var string $content */
 
 use app\assets\MainAsset;
-use yii\bootstrap5\Html;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 MainAsset::register($this);
 $this->registerCsrfMetaTags();
@@ -35,17 +36,17 @@ $user = Yii::$app->user->getIdentity();
     <?php if (Yii::$app->request->url !== '/registration'): ?>
         <div class="nav-wrapper">
             <ul class="nav-list">
-                <li class="list-item list-item--active">
-                    <a class="link link--nav" >Новое</a>
+                <li class="list-item <?=$this->title === 'Новые' ? 'list-item--active' : '' ;?>">
+                    <a href="<?= Yii::$app->urlManager->createUrl(['tasks']); ?>" class="link link--nav" >Новое</a>
                 </li>
-                <li class="list-item">
-                    <a href="#" class="link link--nav" >Мои задания</a>
+                <li class="list-item <?=$this->title === 'Мои' ? 'list-item--active' : '' ;?>">
+                    <a href="<?= Yii::$app->urlManager->createUrl(['tasks/my/new']); ?>" class="link link--nav" >Мои задания</a>
                 </li>
-                <li class="list-item">
-                    <a href="#" class="link link--nav" >Создать задание</a>
+                <li class="list-item <?=$this->title === 'Добавить' ? 'list-item--active' : '' ;?>">
+                    <a href="<?= Yii::$app->urlManager->createUrl(['tasks/add']); ?>" class="link link--nav" >Создать задание</a>
                 </li>
-                <li class="list-item">
-                    <a href="#" class="link link--nav" >Настройки</a>
+                <li class="list-item <?=$this->title === 'Настройки' ? 'list-item--active' : '' ;?>">
+                    <a href="<?= Yii::$app->urlManager->createUrl(['user/setting']); ?>" class="link link--nav" >Настройки</a>
                 </li>
             </ul>
         </div>
@@ -54,14 +55,14 @@ $user = Yii::$app->user->getIdentity();
     <?php if (Yii::$app->request->url !== '/registration'): ?>
     <div class="user-block">
         <a href="#">
-            <img class="user-photo" src="/uploads/user-avatar/<?=Html::encode($user->avatar); ?>" width="55" height="55" alt="Аватар">
+            <img class="user-photo" src="/uploads/user-avatar/<?=$user->avatar ? Html::encode($user->avatar) : '1.png' ; ?>" width="55" height="55" alt="Аватар">
         </a>
         <div class="user-menu">
             <p class="user-name"><?=Html::encode($user->name); ?></p>
             <div class="popup-head">
                 <ul class="popup-menu">
                     <li class="menu-item">
-                        <a href="#" class="link">Настройки</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(['user/setting']); ?>" class="link">Настройки</a>
                     </li>
                     <li class="menu-item">
                         <a href="#" class="link">Связаться с нами</a>
