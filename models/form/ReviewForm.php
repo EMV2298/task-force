@@ -54,7 +54,7 @@ class ReviewForm extends Model
 
       $user = Users::findOne($task->executor_id);
       $user->updateRating();
-    }
+    } else
 
     throw new TaskActionException('Действие вам недоступно');
   }
