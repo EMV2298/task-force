@@ -128,13 +128,13 @@ class TasksController extends SecuredController
     }
   }
 
-  public function actionAccess($task, $user)
+  public function actionAccept($task, $user)
   {
     $task = Tasks::findOne($task);
 
     if ($task->customer_id === Yii::$app->user->getId())
     {      
-      if($task->addExecutor($user))
+      if($task->setExecutor($user))
       {
         return $this->redirect(Yii::$app->request->referrer);
       }
