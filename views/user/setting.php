@@ -47,11 +47,16 @@ $this->title = 'Настройки';
         <?= $form->field($model, 'phone')->input('tel'); ?>
         <?= $form->field($model, 'telegram')->input('text'); ?>
       </div>
-      <?= $form->field($model, 'description')->textarea(); ?>
-      <?= $form->field($model, 'categories')->checkboxList(
-        Categories::getCategories(),
-        ['class' => 'checkbox-profile', 'itemOptions' => ['labelOptions' => ['class' => 'control-label']]]
-      ); ?>
+      <?php
+      echo $form->field($model, 'description')->textarea();
+      if (Yii::$app->user->getIdentity()->is_executor)
+      {
+        echo $form->field($model, 'categories')->checkboxList(
+          Categories::getCategories(),
+          ['class' => 'checkbox-profile', 'itemOptions' => ['labelOptions' => ['class' => 'control-label']]]
+        );
+      }
+      ?>
     <?php else : ?>
       <?php
       if (!Yii::$app->user->getIdentity()->vk_id)
