@@ -9,7 +9,7 @@ use yii\widgets\ListView;
 
 $userId = Yii::$app->user->getId();
 $taskRules = new Task($task->customer_id, $task->executor_id, $task->status);
-$action = $taskRules->getAvailableActions($userId);
+$action = $taskRules->getAvailableActions($userId, $task->id);
 
 ?>
 <main class="main-content container">

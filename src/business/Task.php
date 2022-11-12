@@ -2,6 +2,7 @@
 
 namespace taskforce\business;
 
+use app\models\Offers;
 use taskforce\business\actions\Actions;
 use taskforce\business\actions\Cancel;
 use taskforce\business\actions\Done;
@@ -61,12 +62,15 @@ class Task
     ];
   }
 
-  public function getAvailableActions(int $userId): ?Actions
-  {
+  public function getAvailableActions(int $userId, int $task_id): ?Actions
+  { 
+    $offer = new Offers();
+    $offer = $offer->getUserOffer($userId, $task_id);
+
     if ($this->status === self::STATUS_NEW && Cancel::checkAccess($userId, $this->customerId, $this->executorId)) {
       return new Cancel;
     }
-    if ($this->status === self::STATUS_NEW && Take::checkAccess($userId, $this->customerId, $this->executorId)) {
+    if ($this->status === self::STATUS_NEW && Take::checkAccess($userId, $this->customerId, $this->executorId) && !$offer) {
       return new Take;
     }
     if ($this->status === self::STATUS_IN_PROGRESS && Done::checkAccess($userId, $this->customerId, $this->executorId)) {

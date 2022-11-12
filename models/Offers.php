@@ -32,7 +32,7 @@ class Offers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['task_id', 'executor_id', 'message', 'price'], 'required'],
+            [['task_id', 'executor_id', 'message'], 'required'],
             [['task_id', 'executor_id', 'price'], 'integer'],
             [['dt_add'], 'safe'],
             [['message'], 'string'],
@@ -75,5 +75,12 @@ class Offers extends \yii\db\ActiveRecord
     public function getTask()
     {
         return $this->hasOne(Tasks::class, ['id' => 'task_id']);
+    }
+
+    public function getUserOffer(int $user_id, int $task_id): bool
+    {
+        $offer = $this->findOne(['task_id' => $task_id, 'executor_id' => $user_id]);        
+        
+        return $offer ? true : false;        
     }
 }

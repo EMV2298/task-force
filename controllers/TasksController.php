@@ -157,10 +157,12 @@ class TasksController extends SecuredController
         if($offerModel->saveOffer())
         {
           return $this->redirect(Yii::$app->request->referrer);
+        }else{
+          
+          throw new TaskActionException('Действие не доступно');
         }
       }
     }
-    throw new TaskActionException('Действие не доступно');
     
   }
 
