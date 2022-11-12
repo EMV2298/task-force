@@ -40,7 +40,7 @@ $user = Yii::$app->user->getIdentity();
                     <a href="<?= Yii::$app->urlManager->createUrl(['tasks']); ?>" class="link link--nav" >Новое</a>
                 </li>
                 <li class="list-item <?=$this->title === 'Мои' ? 'list-item--active' : '' ;?>">
-                    <a href="<?= Yii::$app->urlManager->createUrl(['tasks/my/new']); ?>" class="link link--nav" >Мои задания</a>
+                    <a href="<?= Yii::$app->urlManager->createUrl(['tasks/my/inprogress']); ?>" class="link link--nav" >Мои задания</a>
                 </li>
                 <?php if(!$user->is_executor): ?>
                 <li class="list-item <?=$this->title === 'Добавить' ? 'list-item--active' : '' ;?>">
