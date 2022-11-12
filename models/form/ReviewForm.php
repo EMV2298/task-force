@@ -29,8 +29,9 @@ class ReviewForm extends Model
   {
     return
       [
+        ['rating', 'required'],
         ['message', 'string', 'max' => 100],
-        ['rating', 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],
+        ['rating', 'compare', 'compareValue' => 1, 'operator' => '>', 'type' => 'number'],
         ['rating', 'compare', 'compareValue' => 5, 'operator' => '<=', 'type' => 'number'],
         ['taskId', 'exist', 'targetClass' => Tasks::class, 'targetAttribute' => ['taskId' => 'id']],
       ];
@@ -54,6 +55,7 @@ class ReviewForm extends Model
 
       $user = Users::findOne($task->executor_id);
       $user->updateRating();
+      return true;
     } else
 
     throw new TaskActionException('Действие вам недоступно');

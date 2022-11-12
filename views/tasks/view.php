@@ -123,6 +123,7 @@ $action = $taskRules->getAvailableActions($userId, $task->id);
                 <?php echo StarRating::widget([
                     'model' => $reviewModel, 
                     'attribute' => 'rating',
+                    'options' => ['required' => true],
                     'pluginOptions' => [
                         'step' => '1',                               
                         'filledStar' => '<img src="/img/star-fill.svg"></img>',
