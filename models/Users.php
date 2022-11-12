@@ -23,6 +23,7 @@ use yii\web\IdentityInterface;
  * @property string|null $description
  * @property int $status
  * @property int $show_contacts
+ * @property int|null $vk_id
  *
  * @property Categories[] $categories
  * @property Cities $city

@@ -8,6 +8,7 @@ use app\models\Files;
 use app\models\Tasks;
 use taskforce\business\Task;
 use taskforce\exception\TaskAddException;
+use taskforce\Files as TaskforceFiles;
 use Yii;
 use yii\base\Model;
 use yii\web\UploadedFile;
@@ -57,20 +58,6 @@ class AddTask extends Model
       ];
   }
 
-  private function uploadFile($files)
-  {
-    $savedFiles = [];
-    if (is_array($files) && count($files) && $this->validate()) {
-      foreach ($files as $file) {
-        $name = uniqid('task-file') . '.' . $file->getExtension();
-        if ($file->saveAs('@webroot/uploads/tasks-files/' . $name)) {
-          $savedFiles[] = $name;
-        }
-      }
-    }
-    return $savedFiles;
-  }
-
   public function saveTask()
   {
     $task = new Tasks();
@@ -92,7 +79,7 @@ class AddTask extends Model
     }
     
 
-    $this->file_names = $this->uploadFile(UploadedFile::getInstances($this, 'files'));
+    $this->file_names = TaskforceFiles::uploadTaskFiles(UploadedFile::getInstances($this, 'files'));
 
     if (count($this->file_names) > 0 && $task->id) {
       foreach ($this->file_names as $name) {

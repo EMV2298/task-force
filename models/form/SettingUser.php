@@ -5,6 +5,7 @@ namespace app\models\form;
 use app\models\Categories;
 use app\models\ExecutorCategories;
 use app\models\Users;
+use taskforce\Files;
 use Yii;
 use yii\base\Model;
 
@@ -87,10 +88,7 @@ class SettingUser extends Model
 
     if ($this->avatar)
     {     
-      $name = uniqid('user-avatar') . '.' . $this->avatar->getExtension();
-      if ($this->avatar->saveAs('@webroot/uploads/user-avatar/' . $name)) {
-          $user->avatar = $name;
-      }      
+      $user->avatar = Files::uploadUserAvatar($this->avatar);
     }
     
     if (is_array($this->categories) && count($this->categories) > 0)

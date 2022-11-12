@@ -3,6 +3,7 @@
 namespace app\models\form;
 
 use app\models\Users;
+use taskforce\Files;
 use yii\base\Model;
 
 class VkRegistration extends Model
@@ -45,16 +46,8 @@ class VkRegistration extends Model
     $user->is_executor = $this->isexecutor;
     if($this->avatar)
     {
-      $user->avatar = $this->avatar;
+      $user->avatar = Files::uploadUrlAvatar($this->avatar);
     }
     $user->save();    
-  }
-
-
-  public function savePhoto($url)
-  { 
-    $name = uniqid('user') . '.png';  
-    file_put_contents("uploads/user-avatar/{$name}", file_get_contents($url));
-    return $name;
   }
 }

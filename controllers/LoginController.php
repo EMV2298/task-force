@@ -43,12 +43,12 @@ class LoginController extends NotSecuredController
     $vkOauth = new VkoAuth2;
     $token = $vkOauth->getToken($code);
     $user = Users::findOne(['email' => $token['email']]);
-    if (!$user->vk_id) {
-      $user->vk_id = $token['user_id'];
-      $user->save();
-    }
-    
+        
     if ($user) {
+      if (!$user->vk_id){
+        $user->vk_id = $token['user_id'];
+        $user->save();        
+      }
       Yii::$app->user->login($user);
       
       Yii::$app->response->redirect(['tasks']);
@@ -76,9 +76,9 @@ class LoginController extends NotSecuredController
         {
           $model->load(Yii::$app->request->post());
 
-          if ($userData[VkoAuth2::PHOTO_KEY]) {
-            $photo = $model->savePhoto($userData[VkoAuth2::PHOTO_KEY]);
-            $model->avatar = $photo;
+          if ($userData[VkoAuth2::PHOTO_KEY]) 
+          {            
+            $model->avatar = $userData[VkoAuth2::PHOTO_KEY];
           }
           
           if ($model->validate()) {
