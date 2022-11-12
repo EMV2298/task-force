@@ -29,7 +29,8 @@ $action = $taskRules->getAvailableActions($userId, $task->id);
         <div class="map" id="map"></div>
         <input type="hidden" id="lat" value="<?= HTML::encode($task->lat); ?>">
         <input type="hidden" id="long" value="<?= HTML::encode($task->long); ?>">           
-            <p class="map-address"><?= HTML::encode($task->address); ?></p>
+            <p class="map-address town"><?= HTML::encode($task->city->name ?? ''); ?></p>            
+            <p class="map-address"><?= HTML::encode($task->address ?? ''); ?></p>
         </div>
         <?php endif; ?>
         <?php 

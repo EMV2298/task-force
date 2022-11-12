@@ -22,7 +22,8 @@ class AddTask extends Model
   public $date;
   public $files;
   public $lat;
-  public $long; 
+  public $long;
+  public $city; 
 
   public $file_names;
 
@@ -52,7 +53,7 @@ class AddTask extends Model
         ['date', 'date', 'format' => 'Y-m-d'],
         ['date', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>', 'type' => 'date'],
         ['files', 'file', 'maxFiles' => 4, 'maxSize' => 1024 * 1024 * 3],
-        [['lat', 'long', 'address'], 'safe']
+        [['lat', 'long', 'address', 'city'], 'safe']
       ];
   }
 
@@ -84,6 +85,7 @@ class AddTask extends Model
       $task->lat = $this->lat;
       $task->long = $this->long;
       $task->address = $this->address;
+      $task->city_id = Cities::getCityId($this->city);
     }
     if (!$task->save()) {
       throw new TaskAddException('Не удалось загрузить обьявление');

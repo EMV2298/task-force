@@ -15,8 +15,10 @@ class Geocoder
     $apiUrl = 'https://geocode-maps.yandex.ru/';
     $apiController = '1.x';
     $optionsKey = 'response.GeoObjectCollection.featureMember';
-    $addressKey = 'GeoObject.metaDataProperty.GeocoderMetaData.text';
+    $addressKey = 'GeoObject.name';
     $coordinatesKey = 'GeoObject.Point.pos';
+    $cityKey = 'GeoObject.metaDataProperty.GeocoderMetaData.Address.Components';
+    $fullAddressKey = 'GeoObject.metaDataProperty.GeocoderMetaData.text';
 
     $client = new Client([
       'base_uri' => $apiUrl,
@@ -38,10 +40,25 @@ class Geocoder
       $result = [];
       foreach ($options as $value) {
         $latLong = explode(' ', ArrayHelper::getValue($value, $coordinatesKey));
+        $address = ArrayHelper::getValue($value, $addressKey);
+        $location = ArrayHelper::getValue ($value, $cityKey);
+        $city = '';
+        foreach($location as $element){
+          if (array_search('locality', $element)){
+            $city = $element['name'];
+          }
+        }
+        if (!$city)
+        {
+          $city = $address;
+        }
+
         $result[] = [
-          'address' => ArrayHelper::getValue($value, $addressKey),
+          'autocomplete' => ArrayHelper::getValue($value, $fullAddressKey),
+          'address' => $address,
           'lat' => $latLong['0'],
           'long' => $latLong['1'],
+          'city' => $city,
         ];
       }
     }catch(RequestException $e)

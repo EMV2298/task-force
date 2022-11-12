@@ -23,7 +23,15 @@ $this->title = 'Добавить';
                   echo $form->field($model, 'title');
                   echo $form->field($model, 'description')->textarea();
                   echo $form->field($model, 'category')->dropDownList(Categories::getCategories());
-                  echo $form->field($model, 'address')->textInput(['class' => 'location-icon']);
+                ?>
+                <div class="form-group ">
+                  <label class="control-label" for="address">Локация</label>
+                  <input class="location-icon" type="text" id="address">
+                  <div class="help-block"></div>                 
+                </div>
+                <?php
+                  echo $form->field($model, 'address', ['template' => '{input}'])->hiddenInput();
+                  echo $form->field($model, 'city', ['template' => '{input}'])->hiddenInput();
                   echo $form->field($model, 'lat', ['template' => '{input}'])->hiddenInput();
                   echo $form->field($model, 'long', ['template' => '{input}'])->hiddenInput();                  
                 ?>
