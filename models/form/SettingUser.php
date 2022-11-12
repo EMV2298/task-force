@@ -93,7 +93,7 @@ class SettingUser extends Model
       }      
     }
     
-    if (count($this->categories) > 0)
+    if (is_array($this->categories) && count($this->categories) > 0)
     {
       foreach($this->categories as $category)
       {

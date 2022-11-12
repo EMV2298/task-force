@@ -38,7 +38,12 @@ class UserController extends SecuredController
     if (Yii::$app->request->getIsPost())
     {
       $model->load(Yii::$app->request->post());
-      $model->avatar = UploadedFile::getInstance($model, 'avatar');
+
+      if (isset($model->avatar))
+      {
+        $model->avatar = UploadedFile::getInstance($model, 'avatar');
+      }
+      
       if($model->validate())
       {
         if ($model->save())
