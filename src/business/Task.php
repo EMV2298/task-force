@@ -40,8 +40,12 @@ class Task
     $this->executorId = $executorId;
     $this->status = $status;
   }
-
-  public static function getAllStatuses()
+  
+  /**
+   * Возвращает все статусы
+   * @return array статусы
+   */
+  public static function getAllStatuses():array
   {
     return [
       self::STATUS_NEW => 'Новый',
@@ -52,7 +56,11 @@ class Task
     ];
   }
 
-  public function getAllActions()
+  /**
+   * Возвращает все действия
+   * @return array действия
+   */
+  public function getAllActions():array
   {
     return [
       self::ACTION_CUSTOMER_CANCEL => 'Отменить',
@@ -62,6 +70,12 @@ class Task
     ];
   }
 
+  /**
+   * Возвращает доступные действия для пользователя в задании
+   * @param int $userId id пользователя
+   * @param int $task_id id заданий
+   * @return ?Actions доступное действие 
+   */
   public function getAvailableActions(int $userId, int $task_id): ?Actions
   { 
     $offer = new Offers();
@@ -82,6 +96,12 @@ class Task
     return null;
   }
 
+  /**
+   * Возвращает следующий статус при совершении действия
+   * @param string $action Действие 
+   * @return string Следующий статус
+   * @throws TaskActionException Действия не существует
+   */
   public function getNextStatus(string $action): string
   {
     $nextStatus = [

@@ -21,6 +21,9 @@ class VkoAuth2
     private $scope = [VKOAuthUserScope::WALL, VKOAuthUserScope::EMAIL];
     private $fields = ['city', 'email', self::PHOTO_KEY, 'first_name', 'bdate'];
 
+    /**
+     * Создает ссылку и переадресовывает пользователя на vk для получения $code
+     */
     public function openVk()
     {
       $oauth = new VKOAuth();
@@ -28,15 +31,25 @@ class VkoAuth2
       Yii::$app->response->redirect($browser_url);
     }
 
-    public function getToken($code)
+    /**
+     * Получает токен для доступа к данным пользователя
+     * @param string $code Код доступа от VK API
+     * @return array Токен доступа, id, email.
+     */
+    public function getToken(string $code): array
     {
       $oauth = new VKOAuth();
       $response = $oauth->getAccessToken($this->client_id, $this->client_secret, $this->redirect_uri, $code);
       
       return $response;
     }
-    
-    public function getUserData($vkResponse)
+
+    /**
+     * Заврашивае данные о пользователе у VK API по токену
+     * @param array $vkResponse токен от VK API
+     * @return array Данные о пользователе
+     */    
+    public function getUserData(array $vkResponse):array
     {
       $vk = new VKApiClient();
       $access_token = $vkResponse['access_token'];

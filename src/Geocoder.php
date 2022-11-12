@@ -9,7 +9,12 @@ use yii\helpers\ArrayHelper;
 class Geocoder
 {
   const API_KEY = 'e666f398-c983-4bde-8f14-e3fec900592a';
-  
+
+  /**
+   * Получает от API GEOCODER список похожих адресов
+   * @param string $address Адрес для поиска
+   * @return array Возвращает похожие адреса
+   */  
   public function getGeocoderOptions (string $address): array
   {
     $apiUrl = 'https://geocode-maps.yandex.ru/';
