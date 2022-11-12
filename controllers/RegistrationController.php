@@ -20,9 +20,8 @@ class RegistrationController extends NotSecuredController {
         if (!$model->saveUser()->save()){
           throw new ErrorException('Не удалось сохранить данные');
         }
-      }
-        
-      Yii::$app->response->redirect(['tasks']);
+        Yii::$app->response->redirect(['tasks']);
+      }        
     }
 
     return $this->render('registration', ['model' => $model]);
