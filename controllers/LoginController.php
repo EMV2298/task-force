@@ -43,6 +43,10 @@ class LoginController extends NotSecuredController
     $vkOauth = new VkoAuth2;
     $token = $vkOauth->getToken($code);
     $user = Users::findOne(['email' => $token['email']]);
+    if (!$user->vk_id) {
+      $user->vk_id = $token['user_id'];
+      $user->save();
+    }
     
     if ($user) {
       Yii::$app->user->login($user);
