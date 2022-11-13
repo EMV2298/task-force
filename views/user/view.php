@@ -2,6 +2,7 @@
 
 use kartik\rating\StarRating;
 use taskforce\business\Task;
+use taskforce\business\User;
 use yii\helpers\Html;
 ?>
 <main class="main-content container">
@@ -99,7 +100,7 @@ use yii\helpers\Html;
                 <?php endif; ?>
             </dl>
         </div>
-        <?php if ($user->show_contacts) : ?>
+        <?php if (User::showContacts(Yii::$app->user->getId(), $user->id, $user->show_contacts)) : ?>
             <div class="right-card white">
                 <h4 class="head-card">Контакты</h4>
                 <ul class="enumeration-list">
