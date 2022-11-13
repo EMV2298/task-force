@@ -2,8 +2,8 @@
 
 namespace taskforce\business\actions;
 
-abstract class Actions {
-    
+abstract class Actions
+{
     /**
      * Возвращает имя действия для кнопки
      * @return string Имя действия
@@ -15,13 +15,13 @@ abstract class Actions {
      * @return string Имя действия
      */
     abstract public function getInternalName(): string;
-    
+
     /**
      * Возвращает внутренее имя действия
      * @return string Имя действия
      */
     abstract public function getActionData(): string;
-    
+
     /**
      * Возвращает css класс для кнопки действия
      * @return string css класс
@@ -36,4 +36,4 @@ abstract class Actions {
      * @return bool Доступно ли пользователю это действие
      */
     abstract public static function checkAccess(int $userId, int $customerId, ?int $executorId): bool;
-} 
+}

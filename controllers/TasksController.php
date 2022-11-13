@@ -9,7 +9,10 @@ use app\models\form\ReviewForm;
 use app\models\Offers;
 use app\models\Tasks;
 use app\models\Users;
+use taskforce\business\actions\Cancel;
+use taskforce\business\actions\Reject;
 use taskforce\business\Task;
+use taskforce\business\User;
 use taskforce\exception\TaskActionException;
 use taskforce\Geocoder;
 use Yii;
@@ -175,12 +178,16 @@ class TasksController extends SecuredController
   public function actionReject($task)
   {
     $task = Tasks::findOne($task);
-    if ($task && $task->executor_id === Yii::$app->user->getId() && $task->status === Task::STATUS_IN_PROGRESS) {
-      $task->reject();
-      $user = Users::findOne($task->executor_id);
-      $user->updateRating();
+    if ($task) {
+      $checkAccess = new Task($task->customer_id, $task->executor_id, $task->status);
+      $action = $checkAccess->getAvailableActions(Yii::$app->user->getId(), $task->id);
+      if ($action instanceof Reject) {
+        $task->reject();
+        $user = Users::findOne($task->executor_id);
+        $user->updateRating();
 
-      return $this->redirect(Yii::$app->request->referrer);
+        return $this->redirect(Yii::$app->request->referrer);
+      }
     }
     throw new TaskActionException('Действие не доступно');
   }
@@ -188,33 +195,33 @@ class TasksController extends SecuredController
   public function actionCancel($task)
   {
     $task = Tasks::findOne($task);
-    if ($task && $task->customer_id === Yii::$app->user->getId() && $task->status === Task::STATUS_NEW) {
-      $task->cancel();
-      return $this->redirect(Yii::$app->request->referrer);
+    if ($task) {
+      $checkAccess = new Task($task->customer_id, $task->executor_id, $task->status);
+      $action = $checkAccess->getAvailableActions(Yii::$app->user->getId(), $task->id);
+      if ($action instanceof Cancel) {
+        $task->cancel();
+        return $this->redirect(Yii::$app->request->referrer);
+      }
+      throw new TaskActionException('Действие не доступно');
     }
-    throw new TaskActionException('Действие не доступно');
   }
 
   public function actionMy($type)
   {
-    if (in_array($type, [Task::STATUS_DONE, Task::STATUS_IN_PROGRESS, Task::STATUS_NEW], true)) {
+    $taskStatuses = Task::getTaskStatusesForMytask($type);
+
+    if (count($taskStatuses) > 0) {
       $user = Yii::$app->user->getIdentity();
+      $userSqlRole = User::getSqlRole($user->is_executor);
 
       if (!$user->is_executor || $type !== Task::STATUS_NEW) {
-        $userRole = $user->is_executor ? 'executor_id' : 'customer_id';
-        $types = [
-          Task::STATUS_NEW => [Task::STATUS_NEW],
-          Task::STATUS_IN_PROGRESS => [Task::STATUS_IN_PROGRESS],
-          Task::STATUS_DONE => [Task::STATUS_DONE, Task::STATUS_FAIL, Task::STATUS_CANCELED]
-        ];
-
         $dataProvider = new ActiveDataProvider([
-          'query' => Tasks::find()->where([$userRole => $user->id])->andFilterWhere(['IN', 'status', $types[$type]]),
+          'query' => Tasks::find()->where([$userSqlRole => $user->id])
+            ->andFilterWhere(['IN', 'status', $taskStatuses]),
           'pagination' => [
             'pageSize' => self::PAGE_SIZE,
           ],
         ]);
-
         $titles = [
           Task::STATUS_NEW => 'Новые задания',
           Task::STATUS_IN_PROGRESS => 'Задания в процессе',

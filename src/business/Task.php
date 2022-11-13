@@ -3,6 +3,7 @@
 namespace taskforce\business;
 
 use app\models\Offers;
+use ArrayAccess;
 use taskforce\business\actions\Actions;
 use taskforce\business\actions\Cancel;
 use taskforce\business\actions\Done;
@@ -10,6 +11,7 @@ use taskforce\business\actions\Reject;
 use taskforce\business\actions\Take;
 use taskforce\exception\TaskActionException;
 use taskforce\exception\TaskStatusException;
+use yii\base\StaticInstanceInterface;
 
 class Task
 {
@@ -115,5 +117,20 @@ class Task
       throw new TaskActionException('Действия не существует');
     }
     return $nextStatus[$action];
+  }
+
+  /**
+   * Возвращает статусы заданий которые должны отображаться на странице my   * 
+   * @param string $page Фильтр страницы tasks/my из get параметра
+   * @return array Статусы заданий для страницы
+   */
+  public static function getTaskStatusesForMytask(string $page): array
+  {
+    $types = [
+      Task::STATUS_NEW => [Task::STATUS_NEW],
+      Task::STATUS_IN_PROGRESS => [Task::STATUS_IN_PROGRESS],
+      Task::STATUS_DONE => [Task::STATUS_DONE, Task::STATUS_FAIL, Task::STATUS_CANCELED]
+    ];
+    return $types[$page] ? $types[$page] : [];
   }
 };
