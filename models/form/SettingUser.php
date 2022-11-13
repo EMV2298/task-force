@@ -11,98 +11,88 @@ use yii\base\Model;
 
 class SettingUser extends Model
 {
-  public $name;
-  public $email;
-  public $dob;
-  public $phone;
-  public $telegram;
-  public $description;
-  public $categories;
-  public $avatar;
-  
-  public function attributeLabels()
-  {
-    return
-    [
-      'name' => 'Ваше имя',
-      'email' => 'Email',
-      'dob' => 'День рождения',
-      'phone' => 'Номер телефона',
-      'telegram' => 'Telegram',
-      'description' => 'Информация о себе',
-      'categories' => 'Выбор специализаций',
-      'avatar' => 'Аватар'
-    ];
-  }
+    public $name;
+    public $email;
+    public $dob;
+    public $phone;
+    public $telegram;
+    public $description;
+    public $categories;
+    public $avatar;
 
-  public function rules()
-  {
-    return
-    [
-    ['name', 'string', 'max' => 20],
-    ['email', 'email'],
-    ['email', 'unique', 'targetClass' => Users::class, 'targetAttribute' => ['email' => 'email']],
-    ['telegram', 'string', 'max' => 64],
-    ['phone', 'match', 'pattern' => '/^\d+$/'],
-    ['phone', 'string', 'min' => 11, 'max' => 11],
-    ['dob', 'date', 'format' => 'Y-m-d'],
-    ['description', 'string', 'max' => 200 ],
-    ['avatar', 'file', 'extensions' => ['png', 'jpg', 'gif'], 'maxSize' => 1024*1024],
-    ['categories', 'safe']
-    ];
-  }
-
-  public function save()
-  {
-    $user = Users::findOne(Yii::$app->user->getId());
-
-    if ($this->name)
+    public function attributeLabels()
     {
-      $user->name = $this->name;      
+        return
+        [
+          'name' => 'Ваше имя',
+          'email' => 'Email',
+          'dob' => 'День рождения',
+          'phone' => 'Номер телефона',
+          'telegram' => 'Telegram',
+          'description' => 'Информация о себе',
+          'categories' => 'Выбор специализаций',
+          'avatar' => 'Аватар'
+        ];
     }
 
-    if ($this->email)
+    public function rules()
     {
-      $user->email = $this->email;      
+        return
+        [
+        ['name', 'string', 'max' => 20],
+        ['email', 'email'],
+        ['email', 'unique', 'targetClass' => Users::class, 'targetAttribute' => ['email' => 'email']],
+        ['telegram', 'string', 'max' => 64],
+        ['phone', 'match', 'pattern' => '/^\d+$/'],
+        ['phone', 'string', 'min' => 11, 'max' => 11],
+        ['dob', 'date', 'format' => 'Y-m-d'],
+        ['description', 'string', 'max' => 200 ],
+        ['avatar', 'file', 'extensions' => ['png', 'jpg', 'gif'], 'maxSize' => 1024*1024],
+        ['categories', 'safe']
+        ];
     }
 
-    if ($this->dob)
+    public function save()
     {
-      $user->dob = $this->dob;      
-    }
+        $user = Users::findOne(Yii::$app->user->getId());
 
-    if ($this->phone)
-    {
-      $user->phonenumber = $this->phone;      
-    }
+        if ($this->name) {
+            $user->name = $this->name;
+        }
 
-    if ($this->telegram)
-    {
-      $user->telegram = $this->telegram;      
-    }
+        if ($this->email) {
+            $user->email = $this->email;
+        }
 
-    if ($this->description)
-    {
-      $user->description = $this->description;      
-    }
+        if ($this->dob) {
+            $user->dob = $this->dob;
+        }
 
-    if ($this->avatar)
-    {     
-      $user->avatar = Files::uploadUserAvatar($this->avatar);
+        if ($this->phone) {
+            $user->phonenumber = $this->phone;
+        }
+
+        if ($this->telegram) {
+            $user->telegram = $this->telegram;
+        }
+
+        if ($this->description) {
+            $user->description = $this->description;
+        }
+
+        if ($this->avatar) {
+            $user->avatar = Files::uploadUserAvatar($this->avatar);
+        }
+
+        if (is_array($this->categories) && count($this->categories) > 0) {
+            foreach ($this->categories as $category) {
+                $newUserCategory = new ExecutorCategories();
+                $newUserCategory->user_id = $user->id;
+                $newUserCategory->category_id = $category;
+                $newUserCategory->save();
+            }
+        }
+
+        return $user->save();
     }
-    
-    if (is_array($this->categories) && count($this->categories) > 0)
-    {
-      foreach($this->categories as $category)
-      {
-        $newUserCategory = new ExecutorCategories();
-        $newUserCategory->user_id = $user->id;
-        $newUserCategory->category_id = $category;
-        $newUserCategory->save();
-      }
-    }
-    
-    return $user->save();
-  }
 }
-

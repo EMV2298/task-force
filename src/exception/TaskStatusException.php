@@ -1,8 +1,9 @@
 <?php
+
 namespace taskforce\exception;
 
 use Exception;
 
-class TaskStatusException extends Exception {
-  
+class TaskStatusException extends Exception
+{
 }

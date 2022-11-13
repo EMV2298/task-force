@@ -79,8 +79,8 @@ class Offers extends \yii\db\ActiveRecord
 
     public function getUserOffer(int $user_id, int $task_id): bool
     {
-        $offer = $this->findOne(['task_id' => $task_id, 'executor_id' => $user_id]);        
-        
-        return $offer ? true : false;        
+        $offer = $this->findOne(['task_id' => $task_id, 'executor_id' => $user_id]);
+
+        return $offer ? true : false;
     }
 }

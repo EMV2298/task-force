@@ -8,36 +8,36 @@ use yii\base\Model;
 
 class ChangePassword extends Model
 {
-  public $old;
-  public $new;
-  public $repeat;
-  public $showContacts;  
+    public $old;
+    public $new;
+    public $repeat;
+    public $showContacts;
 
-  public function attributeLabels()
-  {
-    return
-    [
-      'old' => 'Старый пароль',
-      'new' => 'Новый пароль',
-      'repeat' => 'Повторите новый пароль',
-      'showContacts' => 'Показать контакты'
-    ];
-  }
+    public function attributeLabels()
+    {
+        return
+        [
+          'old' => 'Старый пароль',
+          'new' => 'Новый пароль',
+          'repeat' => 'Повторите новый пароль',
+          'showContacts' => 'Показать контакты'
+        ];
+    }
 
-  public function rules()
-  {
-    return
-    [
-      [['new', 'old', 'repeat'], 'checkVkId'],
-      [['new', 'repeat'], 'string', 'max' => 150],
-      [['repeat'], 'compare', 'compareAttribute' => 'new'],
-      ['new', 'checkAccess'],
-      ['old', 'checkPassword'],
-      
-    ];
-  }
+    public function rules()
+    {
+        return
+        [
+          [['new', 'old', 'repeat'], 'checkVkId'],
+          [['new', 'repeat'], 'string', 'max' => 150],
+          [['repeat'], 'compare', 'compareAttribute' => 'new'],
+          ['new', 'checkAccess'],
+          ['old', 'checkPassword'],
 
-  public function checkPassword($attribute, $params)
+        ];
+    }
+
+    public function checkPassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
             $user = Yii::$app->user->getIdentity();
@@ -46,34 +46,30 @@ class ChangePassword extends Model
             }
         }
     }
-  public function checkVkId($attribute, $params)
-  {
-    $user = Yii::$app->user->getIdentity();
-    if ($user->vk_id){
-      $this->addError($attribute, 'Невозможно сменить пароль');
-    }
-  }
-
-  public function checkAccess($attribute, $params)
-  {
-    if (!$this->old && $this->new)
+    public function checkVkId($attribute, $params)
     {
-      $this->addError($attribute, 'Введите старый пароль');
+        $user = Yii::$app->user->getIdentity();
+        if ($user->vk_id) {
+            $this->addError($attribute, 'Невозможно сменить пароль');
+        }
     }
-  }
 
-  public function save()
-  {
-    $user = Users::findOne(Yii::$app->user->getId());
-    
-    if ($this->new)
+    public function checkAccess($attribute, $params)
     {
-      $user->password = Yii::$app->getSecurity()->generatePasswordHash($this->new);     
+        if (!$this->old && $this->new) {
+            $this->addError($attribute, 'Введите старый пароль');
+        }
     }
-    $user->show_contacts = $this->showContacts;
 
-    return $user->save();
-  }
+    public function save()
+    {
+        $user = Users::findOne(Yii::$app->user->getId());
 
+        if ($this->new) {
+            $user->password = Yii::$app->getSecurity()->generatePasswordHash($this->new);
+        }
+        $user->show_contacts = $this->showContacts;
 
+        return $user->save();
+    }
 }

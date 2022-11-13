@@ -1,4 +1,5 @@
 <?php
+
 namespace app\controllers;
 
 use yii\filters\AccessControl;
@@ -12,7 +13,7 @@ abstract class NotSecuredController extends Controller
             'access' => [
                 'class' => AccessControl::class,
                 'denyCallback' => function () {
-                  $this->goHome();
+                    $this->goHome();
                 },
                 'rules' => [
                     [

@@ -157,31 +157,28 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         return $this->hasMany(Tasks::class, ['id' => 'task_id'])->viaTable('offers', ['executor_id' => 'id']);
     }
 
-    public function getAge() {
-
+    public function getAge()
+    {
         $age = date_diff(date_create(date('Y-m-d')), date_create($this->dob));
 
         return $age->format("%y");
     }
 
-    public function getCountDoneTasks() {
-
-       return Tasks::find()->where(['executor_id' => $this->id, 'status' => Task::STATUS_DONE])->count();
-        
-        
+    public function getCountDoneTasks()
+    {
+        return Tasks::find()->where(['executor_id' => $this->id, 'status' => Task::STATUS_DONE])->count();
     }
-    public function getCountFailTasks() {
+    public function getCountFailTasks()
+    {
+        return Tasks::find()->where(['executor_id' => $this->id, 'status' => Task::STATUS_FAIL])->count();
+    }
 
-        return Tasks::find()->where(['executor_id' => $this->id, 'status' => Task::STATUS_FAIL])->count();        
-         
-     }
-    
-    public function getPositionInRating() {
-        
+    public function getPositionInRating()
+    {
         $rank = Users::find()
         ->select('ROW_NUMBER() OVER (ORDER BY rating DESC) as number')
         ->indexBy('id')
-        ->column();  
+        ->column();
         return $rank[$this->id];
     }
 
@@ -211,13 +208,12 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
     public function updateRating()
-    {   
+    {
         $sum = Reviews::find()->where(['executor_id' => $this->id])->sum('rating');
-        $countReview = Reviews::find()->where('rating > 0')->andFilterWhere(['executor_id' => $this->id])->count('rating');        
+        $countReview = Reviews::find()->where('rating > 0')->andFilterWhere(['executor_id' => $this->id])->count('rating');
         $countFail = Tasks::find()->where(['executor_id' => $this->id, 'status' => Task::STATUS_FAIL])->count('id');
-        $rating = $sum / ($countFail + $countReview);      
+        $rating = $sum / ($countFail + $countReview);
         $this->rating = round($rating, 2);
         $this->save();
     }
 }
-
