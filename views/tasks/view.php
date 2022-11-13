@@ -9,7 +9,7 @@ use yii\widgets\ListView;
 
 $userId = Yii::$app->user->getId();
 $taskRules = new Task($task->customer_id, $task->executor_id, $task->status);
-$action = $taskRules->getAvailableActions($userId);
+$action = $taskRules->getAvailableActions($userId, $task->id);
 
 ?>
 <main class="main-content container">
@@ -29,7 +29,8 @@ $action = $taskRules->getAvailableActions($userId);
         <div class="map" id="map"></div>
         <input type="hidden" id="lat" value="<?= HTML::encode($task->lat); ?>">
         <input type="hidden" id="long" value="<?= HTML::encode($task->long); ?>">           
-            <p class="map-address"><?= HTML::encode($task->address); ?></p>
+            <p class="map-address town"><?= HTML::encode($task->city->name ?? ''); ?></p>            
+            <p class="map-address"><?= HTML::encode($task->address ?? ''); ?></p>
         </div>
         <?php endif; ?>
         <?php 
@@ -123,6 +124,7 @@ $action = $taskRules->getAvailableActions($userId);
                 <?php echo StarRating::widget([
                     'model' => $reviewModel, 
                     'attribute' => 'rating',
+                    'options' => ['required' => true],
                     'pluginOptions' => [
                         'step' => '1',                               
                         'filledStar' => '<img src="/img/star-fill.svg"></img>',

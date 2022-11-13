@@ -13,7 +13,7 @@ class m221029_205002_delete_NotNull_atribute_user extends Migration
     public function safeUp()
     {
         $this->alterColumn('users', 'password', 'varchar(128) NULL');
-        $this->addColumn('users', 'vk_id', 'varchar(128) NULL');        
+        $this->addColumn('users', 'vk_id', 'varchar(128) NULL');
     }
 
     /**

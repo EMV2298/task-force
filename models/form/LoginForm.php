@@ -5,32 +5,33 @@ namespace app\models\form;
 use app\models\Users;
 use yii\base\Model;
 use Yii\app\security;
+
 class LoginForm extends Model
 {
-  public $email;
-  public $password;
+    public $email;
+    public $password;
 
-  private $_user;
+    private $_user;
 
-  public function attributeLabels()
-  {
-    return
-    [
-    'email' => 'EMAIL ',
-    'password' => 'ПАРОЛЬ ',
-    ];
-  }
+    public function attributeLabels()
+    {
+        return
+        [
+        'email' => 'EMAIL ',
+        'password' => 'ПАРОЛЬ ',
+        ];
+    }
 
-  public function rules()
-  {
-      return 
-      [
-          [['email', 'password'], 'required'],
-          
-          [['password'], 'validatePassword']
-      ];
-  }
-  public function validatePassword($attribute, $params)
+    public function rules()
+    {
+        return
+        [
+            [['email', 'password'], 'required'],
+
+            [['password'], 'validatePassword']
+        ];
+    }
+    public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
@@ -40,14 +41,12 @@ class LoginForm extends Model
         }
     }
 
-    public function getUser()
-    {
-        if ($this->_user === null) {
-            $this->_user = Users::findOne(['email' => $this->email]);
-        }
+      public function getUser()
+      {
+          if ($this->_user === null) {
+              $this->_user = Users::findOne(['email' => $this->email]);
+          }
 
-        return $this->_user;
-    }
+          return $this->_user;
+      }
 }
-
-

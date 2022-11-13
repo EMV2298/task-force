@@ -2,6 +2,7 @@
 
 use kartik\rating\StarRating;
 use taskforce\business\Task;
+use taskforce\business\User;
 use yii\helpers\Html;
 ?>
 <main class="main-content container">
@@ -9,7 +10,7 @@ use yii\helpers\Html;
         <h3 class="head-main"><?= Html::encode($user->name); ?></h3>
         <div class="user-card">
             <div class="photo-rate">
-                <img class="card-photo" src="/img/man-glasses.png" width="191" height="190" alt="Фото пользователя">
+                <img class="card-photo" src="/uploads/user-avatar/<?= Html::encode($user->avatar ?? ''); ?>" width="191" height="190" alt="Фото пользователя">
                 <div class="card-rate">
                     <?php echo StarRating::widget([
                         'name' => 'rating_21',
@@ -55,7 +56,7 @@ use yii\helpers\Html;
             <h4 class="head-regular">Отзывы заказчиков</h4>
             <?php foreach ($user->executorReviews as $review) : ?>
                 <div class="response-card">
-                    <img class="customer-photo" src=<?= Html::encode($review->customer->avatar); ?> width="120" height="127" alt="Фото заказчиков">
+                    <img class="customer-photo" src="/uploads/user-avatar/<?= Html::encode($review->customer->avatar ?? ''); ?>" width="120" height="127" alt="Фото заказчиков">
                     <div class="feedback-wrapper">
                         <p class="feedback">«<?= Html::encode($review->message); ?>»</p>
                         <p class="task">Задание «<a href="#" class="link link--small"><?= Html::encode($review->task->title); ?></a>» <?= Task::getAllStatuses()[$review->task->status]; ?></p>
@@ -99,7 +100,7 @@ use yii\helpers\Html;
                 <?php endif; ?>
             </dl>
         </div>
-        <?php if ($user->show_contacts) : ?>
+        <?php if (User::showContacts(Yii::$app->user->getId(), $user->id, $user->show_contacts)) : ?>
             <div class="right-card white">
                 <h4 class="head-card">Контакты</h4>
                 <ul class="enumeration-list">

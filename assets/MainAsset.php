@@ -27,10 +27,10 @@ class MainAsset extends AssetBundle
         'https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js',
         'https://api-maps.yandex.ru/2.1/?apikey=' . Geocoder::API_KEY . '&lang=ru_RU',
         'js/main.js',
-        '/js/map.js',        
-        '/js/autoComplete.js',        
+        '/js/map.js',
+        '/js/autoComplete.js',
     ];
     public $depends = [
-        'yii\web\YiiAsset',       
+        'yii\web\YiiAsset',
     ];
 }

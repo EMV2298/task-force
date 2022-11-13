@@ -6,26 +6,23 @@ use app\models\form\Registration;
 use ErrorException;
 use Yii;
 
-class RegistrationController extends NotSecuredController {
+class RegistrationController extends NotSecuredController
+{
+    public function actionIndex()
+    {
+        $model = new Registration();
 
-  public function actionIndex() {
+        if (Yii::$app->request->getIsPost()) {
+            $model->load(Yii::$app->request->post());
 
-    $model = new Registration();
-
-    if (Yii::$app->request->getIsPost()){
-      $model->load(Yii::$app->request->post());
-      
-      if ($model->validate()) {
-        
-        if (!$model->saveUser()->save()){
-          throw new ErrorException('Не удалось сохранить данные');
+            if ($model->validate()) {
+                if (!$model->saveUser()->save()) {
+                    throw new ErrorException('Не удалось сохранить данные');
+                }
+                Yii::$app->response->redirect(['tasks']);
+            }
         }
-      }
-        
-      Yii::$app->response->redirect(['tasks']);
+
+        return $this->render('registration', ['model' => $model]);
     }
-
-    return $this->render('registration', ['model' => $model]);
-
-  }
-} 
+}

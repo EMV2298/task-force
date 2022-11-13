@@ -15,7 +15,6 @@ class m221023_203026_Add_column_lat_lng_address_to_tasks extends Migration
         $this->addColumn('tasks', 'lat', 'varchar(15)');
         $this->addColumn('tasks', 'long', 'varchar(15)');
         $this->addColumn('tasks', 'address', 'varchar(255)');
-
     }
 
     /**

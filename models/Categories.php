@@ -84,8 +84,7 @@ class Categories extends \yii\db\ActiveRecord
         $categories = static::find()
             ->select('name')
             ->indexBy('id')
-            ->column();           
+            ->column();
         return $categories;
     }
-
 }

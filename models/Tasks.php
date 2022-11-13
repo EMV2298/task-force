@@ -32,7 +32,7 @@ use Yii;
  * @property Reviews[] $reviews
  */
 class Tasks extends \yii\db\ActiveRecord
-{   
+{
     /**
      * {@inheritdoc}
      */
@@ -143,12 +143,11 @@ class Tasks extends \yii\db\ActiveRecord
     }
 
     public function setExecutor($executorId)
-    {   
-        if (!$this->executor_id)
-        {
+    {
+        if (!$this->executor_id) {
             $this->executor_id = $executorId;
             $this->status = Task::STATUS_IN_PROGRESS;
-                
+
             return $this->save();
         }
         throw new TaskActionException('Исполнитель уже назначен');
@@ -157,7 +156,7 @@ class Tasks extends \yii\db\ActiveRecord
     public function reject()
     {
         $this->status = Task::STATUS_FAIL;
-        $this->save();        
+        $this->save();
     }
 
     public function cancel()
@@ -165,5 +164,4 @@ class Tasks extends \yii\db\ActiveRecord
         $this->status = Task::STATUS_FAIL;
         $this->save();
     }
-    
 }

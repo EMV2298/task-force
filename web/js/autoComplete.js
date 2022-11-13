@@ -1,9 +1,11 @@
 
 const inputLat = document.querySelector('#addtask-lat');
 const inputLong = document.querySelector('#addtask-long');
+const inputAddress = document.querySelector('#addtask-address');
+const inputCity = document.querySelector('#addtask-city');
 
 const autoCompleteJS = new autoComplete({
-  selector: '#addtask-address',  
+  selector: '#address',  
   debounce: 2000,
   searchEngine: 'loose',
   wrapper: false,
@@ -19,7 +21,7 @@ const autoCompleteJS = new autoComplete({
         
     },
     cache:true,
-      keys: ['address'],
+      keys: ['autocomplete'],
     cache: false,
 },
     resultsList: {
@@ -42,10 +44,13 @@ const autoCompleteJS = new autoComplete({
       input: {
           selection: (event) => {
               const selection = event.detail.selection.value;
-              autoCompleteJS.input.value = selection.address;
+              autoCompleteJS.input.value = selection.autocomplete;
               inputLat.value = selection.lat;
               inputLong.value = selection.long;
+              inputAddress.value = selection.address;
+              inputCity.value = selection.city;
           }
       }
   }
 });
+
