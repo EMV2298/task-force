@@ -48,7 +48,7 @@ class SettingUser extends Model
         ['phone', 'string', 'min' => 11, 'max' => 11],
         ['dob', 'date', 'format' => 'Y-m-d'],
         ['description', 'string', 'max' => 200 ],
-        ['avatar', 'file', 'extensions' => ['png', 'jpg', 'gif'], 'maxSize' => 1024*1024],
+        ['avatar', 'file', 'extensions' => ['png', 'jpg', 'gif']],
         ['categories', 'safe']
         ];
     }
