@@ -49,7 +49,7 @@ class ChangePassword extends Model
     public function checkVkId($attribute, $params)
     {
         $user = Yii::$app->user->getIdentity();
-        if ($user->vk_id) {
+        if (!$user->password) {
             $this->addError($attribute, 'Невозможно сменить пароль');
         }
     }

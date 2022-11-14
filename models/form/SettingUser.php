@@ -39,9 +39,10 @@ class SettingUser extends Model
     {
         return
         [
+        [['name', 'email'], 'required'],
         ['name', 'string', 'max' => 20],
         ['email', 'email'],
-        ['email', 'unique', 'targetClass' => Users::class, 'targetAttribute' => ['email' => 'email']],
+        ['email', 'validateEmail'],
         ['telegram', 'string', 'max' => 64],
         ['phone', 'match', 'pattern' => '/^\d+$/'],
         ['phone', 'string', 'min' => 11, 'max' => 11],
@@ -52,31 +53,45 @@ class SettingUser extends Model
         ];
     }
 
+    public function validateEmail($attribute)
+    {
+        $user = Yii::$app->user->getIdentity();
+        if ($this->email !== $user->email) {
+            $checkEmail = Users::findOne(['email' => $this->email]);
+
+            if ($checkEmail) {
+                $this->addError($attribute, 'Этот EMAIL уже занят');
+            }
+        }
+    }
+
+
+
     public function save()
     {
         $user = Users::findOne(Yii::$app->user->getId());
 
-        if ($this->name) {
+        if ($this->name !== $user->name) {
             $user->name = $this->name;
         }
 
-        if ($this->email) {
+        if ($this->email !== $user->email) {
             $user->email = $this->email;
         }
 
-        if ($this->dob) {
+        if ($this->dob !== $user->dob) {
             $user->dob = $this->dob;
         }
 
-        if ($this->phone) {
+        if ($this->phone !== $user->phonenumber) {
             $user->phonenumber = $this->phone;
         }
 
-        if ($this->telegram) {
+        if ($this->telegram !== $user->telegram) {
             $user->telegram = $this->telegram;
         }
 
-        if ($this->description) {
+        if ($this->description !== $user->description) {
             $user->description = $this->description;
         }
 
@@ -85,13 +100,29 @@ class SettingUser extends Model
         }
 
         if (is_array($this->categories) && count($this->categories) > 0) {
+            $deleteCategory = ExecutorCategories::find()->where(['user_id' => $user->id])
+            ->andFilterWhere(['NOT IN', 'category_id', $this->categories])->all();
+            foreach ($deleteCategory as $delete) {
+                $delete->delete();
+            }
+
             foreach ($this->categories as $category) {
-                $newUserCategory = new ExecutorCategories();
-                $newUserCategory->user_id = $user->id;
-                $newUserCategory->category_id = $category;
-                $newUserCategory->save();
+                $check = ExecutorCategories::find()->where(['user_id' => $user->id, 'category_id' => $category])->all();
+                if (!$check) {
+                    $newUserCategory = new ExecutorCategories();
+                    $newUserCategory->user_id = $user->id;
+                    $newUserCategory->category_id = $category;
+                    $newUserCategory->save();
+                }
+            }
+        } else {
+            $deteteElements = ExecutorCategories::find()->where(['user_id' => $user->id])->all();
+            foreach ($deteteElements as $element) {
+                $element->delete();
             }
         }
+
+
 
         return $user->save();
     }
