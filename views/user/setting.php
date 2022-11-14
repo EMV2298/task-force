@@ -59,7 +59,7 @@ $this->title = 'Настройки';
       ?>
     <?php else : ?>
       <?php
-      if (!Yii::$app->user->getIdentity()->vk_id)
+      if (Yii::$app->user->getIdentity()->password)
       {
       echo $form->field($model, 'old')->passwordInput();
       echo $form->field($model, 'new')->passwordInput();
